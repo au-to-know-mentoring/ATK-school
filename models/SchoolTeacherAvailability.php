@@ -36,7 +36,8 @@ class SchoolTeacherAvailability extends DbObject {
 
         $weekdayNumber = date('w', $this->dt_start_time);
         $daysDifference = date('w', $this->dt_start_time) - date('w', strtotime($dateArray['start']));
-        $availDate = date('Y-m-d', strtotime($dateArray['start'] . " + " . $daysDifference . " days"));
+        //$availDate = date('Y-m-d', strtotime($dateArray['start'] . " + " . $daysDifference . " days"));
+        $availDate = date('Y-m-d', strtotime($dateArray['start'] . " + 12 hours") + ($daysDifference * (60 * 60 * 24)));
         return $availDate . " " . date('H:i', $this->dt_start_time);
         //var_dump(date('l', $this->dt_start_time)); die;
         //date('Y-m-d 00:00:00',strtotime($dateArray['end']))
@@ -51,7 +52,8 @@ class SchoolTeacherAvailability extends DbObject {
 
         $weekdayNumber = date('w', $this->dt_start_time);
         $daysDifference = date('w', $this->dt_start_time) - date('w', strtotime($dateArray['start']));
-        $availDate = date('Y-m-d', strtotime($dateArray['start'] . " + " . $daysDifference . " days"));
+        //$availDate = date('Y-m-d', strtotime($dateArray['start'] . " + " . $daysDifference . " days"));
+        $availDate = date('Y-m-d', strtotime($dateArray['start'] . " + 12 hours") + ($daysDifference * (60 * 60 * 24)));
         return $availDate . " " . date('H:i', $this->dt_end_time);
 
         //var_dump(date('l', $this->dt_start_time)); die;
