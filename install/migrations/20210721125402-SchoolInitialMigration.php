@@ -91,7 +91,7 @@ class SchoolInitialMigration extends CmfiveMigration
                     "primary_key" => "id"
                 ])->addColumn($column) // add the id column
                 ->addStringColumn('notes')
-                ->addBooleanColumn('is_secondry_contact')
+                ->addBooleanColumn('is_secondary_contact')
                 ->addStringColumn('contact_relationship')    
                 ->addBooleanColumn('is_billing_contact')
                 ->addIdColumn('student_id')
