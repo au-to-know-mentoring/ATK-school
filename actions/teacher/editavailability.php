@@ -49,7 +49,7 @@ function editavailability_GET(Web $w) {
                 [
                     (new \Html\Form\InputField([
                         "id|name"        => "end_time",
-                        "value"            => $availability->getStartTime(),
+                        "value"            => $availability->getEndTime(),
                         "pattern"        => "^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\s+)?(AM|PM|am|pm)?$",
                         "placeholder"    => "12hr format: 11:30pm or 24hr format: 23:30",
                         "required"        => "true"
@@ -58,7 +58,7 @@ function editavailability_GET(Web $w) {
         ]
     ];
 
-    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id));
+    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id, 'POST', 'Save', null, null, Html::b('/school-teacher/deleteAvailability/' . $availability->id, 'Delete')));
 
 
 }
