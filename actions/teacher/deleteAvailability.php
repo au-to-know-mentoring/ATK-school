@@ -8,26 +8,11 @@ function deleteAvailability_ALL(Web $w){
     if (empty($availability)){
         $w->error('No availability found for id', '/school-teacher/teachercalendar');
     }
-    $user = AuthService::getInstance($w)->user();
-    var_dump($user->_roles[0]);
-    // $availability->delete();
-    // $w->msg("Item deleted", '/school-teacher/teachercalendar');
-    // }
-    // else {
-    //     $w->msg("Permission denied", '/school-teacher/teachercalendar');
-    // }
+    if(AuthService::getInstance($w)->user()->hasRole('school_teacher')){
+        $availability->delete();
+        $w->msg("Item deleted", '/school-teacher/teachercalendar');
+    }
+    else {
+        $w->msg("Permission denied", '/school-teacher/teachercalendar');
+    }
 }
-
-
-
-
-//     //check for permission
-//     $user = AuthService::getInstance($w)->user();
-//     if($user->hasRole("catalogue_admin")){
-//         $item->delete();
-//         $msg = "Item deleted";
-//     } else {
-//         $msg = "You do not have permission to delete";
-//     }
-//     $w->msg($msg, '/catalogue');
-// }

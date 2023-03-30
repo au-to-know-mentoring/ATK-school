@@ -1,5 +1,7 @@
 <?php
 
+use Egulias\EmailValidator\Warning\Warning;
+
 function editavailability_GET(Web $w) {
 
     $p = $w->pathMatch("object_type","object_id", "availability_id");
@@ -24,12 +26,23 @@ function editavailability_GET(Web $w) {
         $object = SchoolService::getInstance($w)->GetStudentForId($p['object_id']);
     }
     
-
-    $w->ctx('title', 'Edit Availability for ' . $object->getFullName());
-
     if (empty($object)) {
         $w->error("No object found for id", "/school");
     }
+
+    $w->ctx('title', 'Edit Availability for ' . $object->getFullName());
+
+
+
+
+
+    $loginUserId = AuthService::getInstance($w)->user()->id;
+
+     if ($p['object_type'] == "teacher" && $loginUserId != $object->user_id) {
+        $w->error("Teacher IDs don't match", "/school");
+     }
+
+
 
     $form = [
         "details" => [
@@ -58,7 +71,7 @@ function editavailability_GET(Web $w) {
         ]
     ];
 
-    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id, 'POST', 'Save', null, null, Html::b('/school-teacher/deleteAvailability/' . $availability->id, 'Delete')));
+    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id, 'POST', 'Save', null, null, Html::b('/school-teacher/deleteAvailability/' . $availability->id, 'Delete', 'Are you sure you want to delete?', null, false, 'warning')));
 
 
 }
