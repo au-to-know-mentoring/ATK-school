@@ -39,7 +39,14 @@ class SchoolClassInstance extends DbObject {
         $title = '';
         if ($this->status == 'Late Cancel') {
             $title .= 'LC ';
+        } else if ($this->status == 'Scheduled') {
+            $title .= 'SCHEDULED ';
+        } else if ($this->status == 'Canceled') {
+            $title .= 'CANCELED ';
+        } else if ($this->status == 'Completed') {
+            $title .= 'COMPLETED ';
         }
+        // } elif ($this->status == 'scheduled')
         $title .= $class_data->getStudent()->getContact()->getFullName() . ' with ' . $this->getTeacher()->getContact()->getFullName();
         return $title; 
     }
