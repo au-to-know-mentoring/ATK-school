@@ -60,6 +60,7 @@ function myfeed_ALL(Web $w) {
                 'start'=> $availability->getStartForCurrentWeek($_REQUEST), // a property!
                 'end'=> $availability->getEndForCurrentWeek($_REQUEST),
                 'className'=> $availability->type,
+                'url'=> '/school-teacher/editavailability/teacher/' . $p['teacher_id'] . '/' . $availability->id,
                 
             ];
             $calendarEvents[] = $event;

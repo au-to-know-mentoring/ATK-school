@@ -24,12 +24,28 @@ function editavailability_GET(Web $w) {
         $object = SchoolService::getInstance($w)->GetStudentForId($p['object_id']);
     }
     
-
-    $w->ctx('title', 'Edit Availability for ' . $object->getFullName());
-
     if (empty($object)) {
         $w->error("No object found for id", "/school");
     }
+
+    $w->ctx('title', 'Edit Availability for ' . $object->getFullName());
+
+
+
+
+
+    $loginUser = AuthService::getInstance($w)->user();
+    
+    // AuthService::getInstance($w)->user()->hasRole('school_teacher')
+    if($loginUser->hasRole('school_teacher')) {
+        if ($p['object_type'] == "teacher" && $loginUser->id != $object->user_id) {  
+            $w->error("Teacher IDs don't match", "/school");
+        }
+        if (!empty($availability->object_id) && $availability->object_id != SchoolService::getInstance($w)->GetTeacherForUserId($loginUser->id)->id) {
+            $w->error("Object ID does not match current user ID", "/school");
+        }
+    } 
+
 
     $form = [
         "details" => [
@@ -49,7 +65,7 @@ function editavailability_GET(Web $w) {
                 [
                     (new \Html\Form\InputField([
                         "id|name"        => "end_time",
-                        "value"            => $availability->getStartTime(),
+                        "value"            => $availability->getEndTime(),
                         "pattern"        => "^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\s+)?(AM|PM|am|pm)?$",
                         "placeholder"    => "12hr format: 11:30pm or 24hr format: 23:30",
                         "required"        => "true"
@@ -58,7 +74,12 @@ function editavailability_GET(Web $w) {
         ]
     ];
 
-    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id));
+    $deleteBtn = '';
+    if (!empty($p['availability_id'])) {
+        $deleteBtn = Html::b('/school-teacher/deleteAvailability/' . $availability->id, 'Delete', 'Are you sure you want to delete?', null, false, 'warning');
+    }
+
+    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id, 'POST', 'Save', null, null, $deleteBtn));
 
 
 }
@@ -112,9 +133,9 @@ function editavailability_POST(Web $w) {
     $availability->insertOrUpdate();
 
     if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
-        $return_url = '/school-manager/calendar?calendar__teacher-id=' . $p['teacher_id'];
+        $return_url = '/school-manager/calendar?calendar__teacher-id=' . $p['object_id'];
     } else {
-        $return_url = "/school-teacher/teachercalendar/" . $p['teacher_id'];
+        $return_url = "/school-teacher/teachercalendar/" . $p['object_id'];
     }
 
     $w->msg("availability updated", $return_url);
