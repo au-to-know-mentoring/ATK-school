@@ -63,7 +63,7 @@ function generateinvoices_POST(Web $w) {
             $invoice = new SchoolInvoice($w);
 
             $class_data = SchoolService::getInstance($w)->GetClassDataForId($client_sessions[0]->class_data_id);
-            $student = $SchoolService::getInstance($w)->GetClassDataForId($client_sessions[0]->class_data_id)->getStudent();
+            $student = SchoolService::getInstance($w)->GetClassDataForId($client_sessions[0]->class_data_id)->getStudent();
 
             
             //echo 'student rate set for ' . $student->getContact()->getFullName() . ' </br>';

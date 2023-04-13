@@ -44,7 +44,7 @@ class SchoolService extends DbService {
     }
 
     public function getInvoiceLinkForClassInstanceId($class_instance_id) {
-        return $this->getObject('SchoolInvoiceline', ['class_instance_id' => $class_instance_id, 'is_deleted' => 0]);
+        return $this->getObject('SchoolInvoiceLine', ['class_instance_id' => $class_instance_id, 'is_deleted' => 0]);
     }
 
     public function getInvoiceForId($invoice_id) {
@@ -285,6 +285,9 @@ class SchoolService extends DbService {
         }
 
         $nav = $nav ? $nav : [];
+
+        
+
 
         if ($w->Auth->loggedIn()) {
             $user = AuthService::getInstance($w)->user();

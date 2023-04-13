@@ -88,12 +88,14 @@ class SchoolClassData extends DbObject {
             $weekdayName = date('l Y/m/d', $this->dt_class_date);
             $weekdayNumber = date('w', $this->dt_class_date);
             $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start']));
-            $classDate = date('Y-m-d', strtotime($dateArray['start'] . " + " . $daysDifference . " days"));
+            $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
+            $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
 
             // echo "<pre>";
             // var_dump($weekdayName);
             // var_dump($weekdayNumber);
-            // var_dump(date('l Y/m/d',strtotime($dateArray['start'])));
+            // var_dump(date('l Y/m/d H:i',strtotime($dateArray['start'])));
+            // var_dump(date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
             // var_dump($daysDifference); 
             // var_dump($classDate);
             // die;
