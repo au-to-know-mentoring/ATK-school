@@ -8,11 +8,26 @@ function deleteAvailability_ALL(Web $w){
     if (empty($availability)){
         $w->error('No availability found for id', '/school-teacher/teachercalendar');
     }
-    if(AuthService::getInstance($w)->user()->hasRole('school_teacher')){
+
+    $user = AuthService::getInstance($w)->user();
+
+    $redirectUrl = '';
+
+    if($user->hasRole('school_manager')) {
+        $redirectUrl = '/school-manager/calendar?calendar__teacher-id=' . $availability->object_id; 
+    } else {
+        $redirectUrl = '/school-teacher/teachercalendar';
+    }
+
+
+
+
+    $loginUser = AuthService::getInstance($w)->user();
+    if(($user->hasRole('school_teacher') && $availability->object_id == SchoolService::getInstance($w)->GetTeacherForUserId($loginUser->id)->id) or $user->hasRole('school_manager')){
         $availability->delete();
-        $w->msg("Item deleted", '/school-teacher/teachercalendar');
+        $w->msg("Item deleted", $redirectUrl);
     }
     else {
-        $w->msg("Permission denied", '/school-teacher/teachercalendar');
+        $w->error("Permission denied", $redirectUrl);
     }
 }

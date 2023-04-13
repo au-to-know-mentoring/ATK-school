@@ -76,6 +76,7 @@ function myfeed_ALL(Web $w) {
                 'title'=> $availability->type, // a property!
                 'start'=> $availability->getStartForCurrentWeek($_REQUEST), // a property!
                 'end'=> $availability->getEndForCurrentWeek($_REQUEST),
+                'url'=> '/school-teacher/editavailability/' . "teacher/" . $p['teacher_id'] . '/' .  $availability->id,  ///////////////
                 'className'=> $availability->type,
                 
             ];

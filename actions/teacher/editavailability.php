@@ -36,12 +36,17 @@ function editavailability_GET(Web $w) {
 
 
 
-    $loginUserId = AuthService::getInstance($w)->user()->id;
-
-     if ($p['object_type'] == "teacher" && $loginUserId != $object->user_id) {
-        $w->error("Teacher IDs don't match", "/school");
-     }
-
+    $loginUser = AuthService::getInstance($w)->user();
+    
+    // AuthService::getInstance($w)->user()->hasRole('school_teacher')
+    if($loginUser->hasRole('school_teacher')) {
+        if ($p['object_type'] == "teacher" && $loginUser->id != $object->user_id) {  ///////////////////////
+            $w->error("Teacher IDs don't match", "/school");
+        }
+        if (!empty($availability->object_id) && $availability->object_id != SchoolService::getInstance($w)->GetTeacherForUserId($loginUser->id)->id) {
+            $w->error("Object ID does not match current user ID", "/school");
+        }
+    } 
 
 
     $form = [
@@ -71,7 +76,12 @@ function editavailability_GET(Web $w) {
         ]
     ];
 
-    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id, 'POST', 'Save', null, null, Html::b('/school-teacher/deleteAvailability/' . $availability->id, 'Delete', 'Are you sure you want to delete?', null, false, 'warning')));
+    $deleteBtn = '';
+    if (!empty($p['availability_id'])) {
+        $deleteBtn = Html::b('/school-teacher/deleteAvailability/' . $availability->id, 'Delete', 'Are you sure you want to delete?', null, false, 'warning');
+    }
+
+    $w->ctx("form", Html::multiColForm($form, "/school-teacher/editavailability/" . $p['object_type'] . "/" . $object->id . "/" . $availability->id, 'POST', 'Save', null, null, $deleteBtn));
 
 
 }
@@ -125,9 +135,9 @@ function editavailability_POST(Web $w) {
     $availability->insertOrUpdate();
 
     if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
-        $return_url = '/school-manager/calendar?calendar__teacher-id=' . $p['teacher_id'];
+        $return_url = '/school-manager/calendar?calendar__teacher-id=' . $p['object_id'];
     } else {
-        $return_url = "/school-teacher/teachercalendar/" . $p['teacher_id'];
+        $return_url = "/school-teacher/teachercalendar/" . $p['object_id'];
     }
 
     $w->msg("availability updated", $return_url);

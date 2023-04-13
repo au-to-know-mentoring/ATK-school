@@ -16,6 +16,7 @@ function calendar_ALL(Web $w) {
         $w->error('Cannot view page');
     }
 
+
     if (empty($classes)) {
         $w->error('no classes found');
     }
