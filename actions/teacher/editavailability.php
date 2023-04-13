@@ -1,7 +1,5 @@
 <?php
 
-use Egulias\EmailValidator\Warning\Warning;
-
 function editavailability_GET(Web $w) {
 
     $p = $w->pathMatch("object_type","object_id", "availability_id");
@@ -40,7 +38,7 @@ function editavailability_GET(Web $w) {
     
     // AuthService::getInstance($w)->user()->hasRole('school_teacher')
     if($loginUser->hasRole('school_teacher')) {
-        if ($p['object_type'] == "teacher" && $loginUser->id != $object->user_id) {  ///////////////////////
+        if ($p['object_type'] == "teacher" && $loginUser->id != $object->user_id) {  
             $w->error("Teacher IDs don't match", "/school");
         }
         if (!empty($availability->object_id) && $availability->object_id != SchoolService::getInstance($w)->GetTeacherForUserId($loginUser->id)->id) {
