@@ -40,9 +40,9 @@ class SchoolClassInstance extends DbObject {
         if ($this->status == 'Late Cancel') {
             $title .= 'LC ';
         } else if ($this->status == 'Scheduled') {
-            $title .= 'SCEDULED ';
+            $title .= 'SCHEDULED ';
         } else if ($this->status == 'Canceled') {
-            $title .= 'CANCELLED ';
+            $title .= 'CANCELED ';
         } else if ($this->status == 'Completed') {
             $title .= 'COMPLETED ';
         }
