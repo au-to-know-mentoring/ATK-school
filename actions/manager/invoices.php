@@ -54,14 +54,14 @@ function invoices_ALL(Web $w) {
 
     //make table for new invoices
     $newtable = [];
-    $newheaders = ['Invoice Number', 'Invoice Status', 'Participant', 'Amount', 'Date Sent', 'Actions'];
+    $newheaders = ['Invoice Number', 'Invoice Status', 'Participant', 'Amount', 'Actions'];
     foreach($new_invoices as $invoice) {
         $row = [];
         $row[] = $invoice->id;
         $row[] = $invoice->status;
         $row[] = $invoice->getStudent()->getContact()->getFullName();
         $row[] = formatCurrency($invoice->total_charge);
-        $row[] = date('d/m/Y', $invoice->dt_sent);
+        //$row[] = date('d/m/Y', $invoice->dt_sent);
         $row[] = Html::b('/school-manager/viewInvoice/' . $invoice->id, 'View Invoice');
         $newtable[] = $row;
     }
