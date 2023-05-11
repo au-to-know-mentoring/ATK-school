@@ -14,7 +14,7 @@ function teacheredit_GET(Web $w)
         $teacher = new SchoolTeacher($w);
         $user = new User($w);
         $contact = new Contact($w);
-        $w->ctx("title","Add Teacher");
+        $w->ctx("title","Add Mentor");
     }
 
     $form = [
