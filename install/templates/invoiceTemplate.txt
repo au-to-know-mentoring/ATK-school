@@ -1,0 +1,449 @@
+<html>
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <style type="text/css">
+        @import url('https://themes.googleusercontent.com/fonts/css?kit=Lx1xfUTR4qFjwg0Z_pb902LnpIA1imYKZeTuaOqvVDE');
+
+        ol {
+            margin: 0;
+            padding: 0
+        }
+
+        table td,
+        table th {
+            padding: 0
+        }
+
+        .c18 {
+            border-right-style: solid;
+            padding: 2.8pt 2.8pt 2.8pt 2.7pt;
+            border-bottom-color: #000000;
+            border-top-width: 1pt;
+            border-right-width: 1pt;
+            border-left-color: #000000;
+            vertical-align: top;
+            border-right-color: #000000;
+            border-left-width: 1pt;
+            border-top-style: solid;
+            border-left-style: solid;
+            border-bottom-width: 1pt;
+            width: 180pt;
+            border-top-color: #000000;
+            border-bottom-style: solid
+        }
+
+        .c2 {
+            border-right-style: solid;
+            padding: 2.8pt 2.8pt 2.8pt 2.7pt;
+            border-bottom-color: #000000;
+            border-top-width: 1pt;
+            border-right-width: 1pt;
+            border-left-color: #000000;
+            vertical-align: top;
+            border-right-color: #000000;
+            border-left-width: 1pt;
+            border-top-style: solid;
+            border-left-style: solid;
+            border-bottom-width: 1pt;
+            width: 141pt;
+            border-top-color: #000000;
+            border-bottom-style: solid
+        }
+
+        .c13 {
+            border-right-style: solid;
+            padding: 2.8pt 2.8pt 2.8pt 2.7pt;
+            border-bottom-color: #000000;
+            border-top-width: 1pt;
+            border-right-width: 1pt;
+            border-left-color: #000000;
+            vertical-align: top;
+            border-right-color: #000000;
+            border-left-width: 1pt;
+            border-top-style: solid;
+            border-left-style: solid;
+            border-bottom-width: 1pt;
+            width: 480.8pt;
+            border-top-color: #000000;
+            border-bottom-style: solid
+        }
+
+        .c3 {
+            border-right-style: solid;
+            padding: 2.8pt 2.8pt 2.8pt 2.7pt;
+            border-bottom-color: #000000;
+            border-top-width: 1pt;
+            border-right-width: 1pt;
+            border-left-color: #000000;
+            vertical-align: top;
+            border-right-color: #000000;
+            border-left-width: 1pt;
+            border-top-style: solid;
+            border-left-style: solid;
+            border-bottom-width: 1pt;
+            width: 159.8pt;
+            border-top-color: #000000;
+            border-bottom-style: solid
+        }
+
+        .c0 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 15pt;
+            font-family: "Times New Roman";
+            font-style: normal
+        }
+
+        .c16 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 14pt;
+            font-family: "Times New Roman";
+            font-style: normal
+        }
+
+        .c14 {
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 28pt;
+            font-family: "Times New Roman";
+            font-style: normal
+        }
+
+        .c7 {
+            color: #212121;
+            font-weight: 400;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-size: 12pt;
+            font-family: "Times New Roman";
+            font-style: normal
+        }
+
+        .c21 {
+            padding-top: 12pt;
+            padding-bottom: 12pt;
+            line-height: 1.15;
+            orphans: 2;
+            widows: 2;
+            text-align: right
+        }
+
+        .c29 {
+            background-color: #ffffff;
+            font-size: 10pt;
+            font-family: "Roboto";
+            color: #222222;
+            font-weight: 400
+        }
+
+        .c19 {
+            color: #000000;
+            text-decoration: none;
+            vertical-align: baseline;
+            font-family: "Times New Roman";
+            font-style: normal
+        }
+
+        .c11 {
+            font-size: 12pt;
+            font-family: "Helvetica Neue";
+            color: #222222;
+            font-weight: 400
+        }
+
+        .c9 {
+            margin-left: -2.7pt;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-right: auto
+        }
+
+        .c1 {
+            padding-top: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.0;
+            text-align: right
+        }
+
+        .c22 {
+            padding-top: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.15;
+            text-align: left
+        }
+
+        .c5 {
+            padding-top: 0pt;
+            padding-bottom: 0pt;
+            line-height: 1.0;
+            text-align: left
+        }
+
+        .c24 {
+            font-size: 12pt;
+            font-style: normal;
+            color: #000000;
+            font-weight: 400
+        }
+
+        .c6 {
+            padding-top: 0pt;
+            padding-bottom: 6pt;
+            line-height: 1.0;
+            text-align: right
+        }
+
+        .c12 {
+            padding-top: 0pt;
+            padding-bottom: 6pt;
+            line-height: 1.0;
+            text-align: left
+        }
+
+        .c23 {
+            background-color: #ffffff;
+            max-width: 481.9pt;
+            padding: 56.7pt 56.7pt 56.7pt 56.7pt
+        }
+
+        .c28 {
+            font-family: "Helvetica Neue";
+            color: #222222;
+            font-weight: 400
+        }
+
+        .c27 {
+            text-decoration: none;
+            vertical-align: baseline;
+            font-style: normal
+        }
+
+        .c20 {
+            font-weight: 400;
+            font-size: 20pt
+        }
+
+        .c25 {
+            font-weight: 400;
+            font-size: 48pt
+        }
+
+        .c26 {
+            font-size: 11pt;
+            font-style: italic
+        }
+
+        .c15 {
+            color: #212121
+        }
+
+        .c8 {
+            height: 12pt
+        }
+
+        .c10 {
+            font-size: 15pt
+        }
+
+        .c17 {
+            font-weight: 700
+        }
+
+        .c4 {
+            height: 0pt
+        }
+
+        .title {
+            padding-top: 24pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 36pt;
+            padding-bottom: 6pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        .subtitle {
+            padding-top: 18pt;
+            color: #666666;
+            font-size: 24pt;
+            padding-bottom: 4pt;
+            font-family: "Georgia";
+            line-height: 1.0;
+            page-break-after: avoid;
+            font-style: italic;
+            text-align: left
+        }
+
+        li {
+            color: #000000;
+            font-size: 12pt;
+            font-family: "Times New Roman"
+        }
+
+        p {
+            margin: 0;
+            color: #000000;
+            font-size: 12pt;
+            font-family: "Times New Roman"
+        }
+
+        h1 {
+            padding-top: 24pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 24pt;
+            padding-bottom: 6pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h2 {
+            padding-top: 18pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 18pt;
+            padding-bottom: 4pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h3 {
+            padding-top: 14pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 14pt;
+            padding-bottom: 4pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h4 {
+            padding-top: 12pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 12pt;
+            padding-bottom: 2pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h5 {
+            padding-top: 11pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 11pt;
+            padding-bottom: 2pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+
+        h6 {
+            padding-top: 10pt;
+            color: #000000;
+            font-weight: 700;
+            font-size: 10pt;
+            padding-bottom: 2pt;
+            font-family: "Times New Roman";
+            line-height: 1.0;
+            page-break-after: avoid;
+            text-align: left
+        }
+    </style>
+</head>
+
+<body class="c23 doc-content">
+    <p class="c5"><span
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 602.00px; height: 107.00px;"><img
+                alt="" src="images/image1.jpg"
+                style="width: 602.00px; height: 107.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                title=""></span></p>
+    <p class="c5"><span class="c19 c25">Invoice</span></p>
+    <p class="c1"><span class="c14">AU TO KNOW MENTORING</span></p>
+    <p class="c1"><span class="c14">ABN: 98 277 208 482</span></p>
+    <p class="c1"><span class="c19 c20">au.to.know.contact@gmail.com</span></p>
+    <p class="c1 c8"><span class="c14"></span></p>
+    <p class="c1"><span class="c19 c20">Date: 29/11/2021</span></p>
+    <p class="c1"><span class="c19 c20">Invoice no. {{invoice_number}}</span></p>
+    <p class="c5"><span class="c24">Atten: </span><span class="c11"> </span><span class="c28">{{billing_contact_name}}</span></p>
+    <p class="c5"><span class="c29">{{billing_contact_email}}</span></p>
+    <p class="c12"><span class="c7">Service: Mentoring</span><span class="c15"> for {{student_name}}</span></p><a
+        id="t.3a6d5b8aa4aa05e69fc323e6dbf98f38361fb35b"></a><a id="t.0"></a>
+    <table class="c9">
+        <!--<tr class="c4">
+            <td class="c13" colspan="3" rowspan="1">
+                <p class="c1"><span class="c0">Hourly rate: </span><span class="c10">{{rate}}</span><span
+                        class="c0"> per </span><span class="c10">hour</span></p>
+            </td>
+        </tr>-->
+        <tr class="c4">
+            <td class="c18" colspan="1" rowspan="1">
+                <p class="c5"><span class="c19 c10 c17">Item</span></p>
+            </td>
+            <td class="c2" colspan="1" rowspan="1">
+                <p class="c1"><span class="c19 c10 c17">Quantity</span></p>
+            </td>
+          <td class="c2" colspan="1" rowspan="1">
+                <p class="c1"><span class="c19 c10 c17">Rate</span></p>
+            </td>
+            <td class="c3" colspan="1" rowspan="1">
+                <p class="c1"><span class="c19 c10 c17">Totals</span></p>
+            </td>
+        </tr>
+      {% for line in invoice_lines %}
+        <tr class="c4">
+            <td class="c18" colspan="1" rowspan="1">
+                <p class="c5"><span class="c10">Mentoring session {{line.session_date}}</span></p>
+            </td>
+            <td class="c2" colspan="1" rowspan="1">
+                <p class="c1"><span class="c10">{{line.duration}}Hrs</span></p>
+            </td>
+          	<td class="c2" colspan="1" rowspan="1">
+                <p class="c1"><span class="c10">{{line.rate}}Hrs</span></p>
+            </td>
+            <td class="c3" colspan="1" rowspan="1">
+                <p class="c6"><span class="c10">{{line.total}}</span></p>
+            </td>
+        </tr>
+      {% endfor %}
+        <tr class="c4">
+            <td class="c18" colspan="1" rowspan="1">
+                <p class="c5"><span class="c19 c10 c17">Total Amount Payable</span></p>
+            </td>
+            <td class="c2" colspan="2" rowspan="1">
+                <p class="c1 c8"><span class="c10 c17 c19"></span></p>
+            </td>
+            <td class="c3" colspan="1" rowspan="1">
+                <p class="c6"><span class="c10 c17">${{invoice_total}}</span></p>
+            </td>
+        </tr>
+    </table>
+    <p class="c5"><span class="c16">No GST has been charged</span></p>
+    <p class="c5 c8"><span class="c16"></span></p>
+    <p class="c1"><span class="c16">Name: Au To Know Mentoring </span></p>
+    <p class="c1"><span class="c16">Account number: 12326235</span></p>
+    <p class="c1"><span class="c16">BSB: 313140</span></p>
+    <p class="c21"><span class="c26">Payment due within 7 days of date of  invoice</span></p>
+</body>
+
+</html>
