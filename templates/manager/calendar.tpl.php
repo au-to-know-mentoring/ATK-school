@@ -4,6 +4,9 @@ $w->enqueueScript(array("name" => "main.js", "uri" => "/modules/school/includes/
 
 ?>
 <style>
+  .FirstSession {
+    background-color: purple;
+  }
   .Available {
     background-color: green;
   }

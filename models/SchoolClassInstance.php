@@ -7,6 +7,9 @@ class SchoolClassInstance extends DbObject {
     public $dt_class_date;
     public $status; // 'Scheduled', 'Late Cancel', 'Canceled', 'Completed'
     public $teachers_notes;
+
+    
+    
     
     public function getClassData() {
         return SchoolService::getInstance($this->w)->GetClassDataForId($this->class_data_id);
@@ -59,4 +62,6 @@ class SchoolClassInstance extends DbObject {
         return false;
     }
 
+
+    
 }
