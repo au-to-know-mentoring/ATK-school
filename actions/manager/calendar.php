@@ -38,7 +38,7 @@ function calendar_ALL(Web $w) {
 
     //create filters
     $filter = [
-        ["Filter By Menotor", "select", "calendar__teacher-id",  !empty($teacher_id) ? $teacher_id : null, SchoolService::getInstance($w)->GetAllTeachers()],
+        ["Filter By Mentor", "select", "calendar__teacher-id",  !empty($teacher_id) ? $teacher_id : null, SchoolService::getInstance($w)->GetAllTeachers()],
     ];
     $w->ctx("filter_data", $filter);
 

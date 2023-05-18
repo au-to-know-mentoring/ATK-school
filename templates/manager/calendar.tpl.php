@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php
+
   // if ($user->hasRole('school_manager')) {
   //   echo Html::b("/school_teacher/teachercalendar/?")
   // }
@@ -49,10 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 ?>
 <?php 
-    echo Html::filter("Filters", $filter_data, "/school-manager/calendar", "GET"); 
+    echo Html::filter("Filters", $filter_data, "/school-manager/calendar", "GET");
     if (!empty($teacher_id)) {
         echo Html::b('/school-teacher/editavailability/teacher/' . $teacher_id, 'Add New Availability for ' . SchoolService::getInstance($w)->GetTeacherForId($teacher_id)->getFullName());
     }
+    echo Html::box("/school-manager/calendarsettings", "Calender Settings", true);
 ?>
 
 <div id='calendar'></div>
