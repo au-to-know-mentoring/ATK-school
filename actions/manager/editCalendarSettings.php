@@ -1,12 +1,16 @@
 <?php 
 
 
-function calendarsettings_GET(Web $w){
+function editCalendarSettings_GET(Web $w){
     
     $user = AuthService::getInstance($w)->user();
+
     if (!$user->hasRole('school_manager')) {
         $w->error('Cannot view page');
     }
+
+    $mentorsCalendarSettings = SchoolService::getInstance($w)->getCalenderSettingsForUserId($user->id);
+    var_dump($mentorsCalendarSettings); die;
 
     $calendar_option_array = [];
 

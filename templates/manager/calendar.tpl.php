@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!empty($teacher_id)) {
         echo Html::b('/school-teacher/editavailability/teacher/' . $teacher_id, 'Add New Availability for ' . SchoolService::getInstance($w)->GetTeacherForId($teacher_id)->getFullName());
     }
-    echo Html::box("/school-manager/calendarsettings", "Calender Settings", true);
+    echo Html::box("/school-manager/editCalendarSettings", "Calender Settings", true);
 ?>
 
 <div id='calendar'></div>
