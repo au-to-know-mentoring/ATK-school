@@ -17,7 +17,7 @@ class SchoolService extends DbService {
 
     public function getCalenderSettingsForUserId($user_id) {
         return $this->GetObjects('SchoolCalenderSettings', ['user_id' => $user_id, 'is_deleted' =>0]);
-    }
+    }selec
 
     public function getUninvoicedClasses() {
         //get 'active' class data

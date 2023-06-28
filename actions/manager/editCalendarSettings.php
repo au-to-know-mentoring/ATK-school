@@ -9,8 +9,8 @@ function editCalendarSettings_GET(Web $w){
         $w->error('Cannot view page');
     }
 
-    $mentorsCalendarSettings = SchoolService::getInstance($w)->getCalenderSettingsForUserId($user->id);
-    var_dump($mentorsCalendarSettings); die;
+    // $mentorsCalendarSettings = SchoolService::getInstance($w)->getCalenderSettingsForUserId($user->id);
+    // var_dump($mentorsCalendarSettings); die;
 
     $calendar_option_array = [];
 
@@ -27,11 +27,14 @@ function editCalendarSettings_GET(Web $w){
         'Calendar Settings' => $calendar_option_array
     ];
 
-    $w->out(Html::multiColForm($form, '/school-manager/calendaroptions', "POST", "Apply"));
+
+    // What is calendaroptions
+    $w->out(Html::multiColForm($form, '/school-manager/editCalendarSettings', "POST", "Apply"));
 
 
 }
 
 function calendarsettings_POST(Web $w){
-
+    
+    
 }
