@@ -122,5 +122,6 @@ function editCalendarSettings_POST(Web $w)
 
         $calendar_settings->colour = $subArray['colour'];
         $calendar_settings->insertOrUpdate();
+        $w->msg("Calender settings set successfully", 'school-manager/calendar');
     }
 }

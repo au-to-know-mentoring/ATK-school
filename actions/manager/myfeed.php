@@ -56,6 +56,8 @@ function myfeed_ALL(Web $w) {
             //var_dump($time->format('T')); echo "<br>";
             // Us dumb Americans can't handle millitary time
             //ampm = $time->format('H') > 12 ? ' ('. $time->format('g:i a'). ')' : '';
+            $teacher_id = $class_instance->getTeacher()->id;
+
             $event = [
                 'title'=> $class_instance->getCalendarTitle(), // a property!
                 // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
@@ -63,7 +65,7 @@ function myfeed_ALL(Web $w) {
                 'start'=> $start, // date('Y-m-d H:i', $class_instance->dt_class_date), // a property!
                 'end'=> $end, //date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60)),
                 'url'=> '/school-teacher/viewclassinstance/' . $class_instance->id,
-                'className' => $class_instance->status,
+                'className' => $class_instance->status . " " . "teacher_" . $teacher_id,
             ];
             $calendarEvents[] = $event;
         }
