@@ -27,6 +27,7 @@ function myfeed_ALL(Web $w) {
     }
 
     //var_dump($class_instances);
+    
 
     $calendarEvents = [];
 
@@ -52,7 +53,7 @@ function myfeed_ALL(Web $w) {
                 $end = $time->format('Y-m-d H:i');
                 //var_dump($start); die;
             }
-            
+            //  var_dump($class_instance);
             //var_dump($time->format('T')); echo "<br>";
             // Us dumb Americans can't handle millitary time
             //ampm = $time->format('H') > 12 ? ' ('. $time->format('g:i a'). ')' : '';

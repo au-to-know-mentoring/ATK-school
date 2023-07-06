@@ -14,12 +14,22 @@
         table th {
             padding: 0
         }
+      .myPageWidth
+      {
+        max-height: 100%;
+        max-width: 100%;
+      }
+      
+      
+      .myTopBorder {
+        border-top-width: 5pt;
+      }
 
         .c18 {
             border-right-style: solid;
             padding: 2.8pt 2.8pt 2.8pt 2.7pt;
             border-bottom-color: #000000;
-            border-top-width: 1pt;
+            border-top-width: 1pt; /* changed */
             border-right-width: 1pt;
             border-left-color: #000000;
             vertical-align: top;
@@ -28,7 +38,7 @@
             border-top-style: solid;
             border-left-style: solid;
             border-bottom-width: 1pt;
-            width: 180pt;
+            /* width: 180pt; */
             border-top-color: #000000;
             border-bottom-style: solid
         }
@@ -37,7 +47,7 @@
             border-right-style: solid;
             padding: 2.8pt 2.8pt 2.8pt 2.7pt;
             border-bottom-color: #000000;
-            border-top-width: 1pt;
+            border-top-width: 1pt; /* changed */
             border-right-width: 1pt;
             border-left-color: #000000;
             vertical-align: top;
@@ -46,7 +56,7 @@
             border-top-style: solid;
             border-left-style: solid;
             border-bottom-width: 1pt;
-            width: 141pt;
+            /* width: 141pt; */
             border-top-color: #000000;
             border-bottom-style: solid
         }
@@ -55,7 +65,7 @@
             border-right-style: solid;
             padding: 2.8pt 2.8pt 2.8pt 2.7pt;
             border-bottom-color: #000000;
-            border-top-width: 1pt;
+            border-top-width: 1pt;/* changed */
             border-right-width: 1pt;
             border-left-color: #000000;
             vertical-align: top;
@@ -64,7 +74,7 @@
             border-top-style: solid;
             border-left-style: solid;
             border-bottom-width: 1pt;
-            width: 480.8pt;
+            /* width: 480.8pt; */
             border-top-color: #000000;
             border-bottom-style: solid
         }
@@ -73,7 +83,7 @@
             border-right-style: solid;
             padding: 2.8pt 2.8pt 2.8pt 2.7pt;
             border-bottom-color: #000000;
-            border-top-width: 1pt;
+            border-top-width: 1pt; /* changed */
             border-right-width: 1pt;
             border-left-color: #000000;
             vertical-align: top;
@@ -82,7 +92,7 @@
             border-top-style: solid;
             border-left-style: solid;
             border-bottom-width: 1pt;
-            width: 159.8pt;
+           /* width: 159.8pt; */
             border-top-color: #000000;
             border-bottom-style: solid
         }
@@ -396,7 +406,7 @@
                         class="c0"> per </span><span class="c10">hour</span></p>
             </td>
         </tr>-->
-        <tr class="c4">
+        <tr class="c4 myTopBorder" >
             <td class="c18" colspan="1" rowspan="1">
                 <p class="c5"><span class="c19 c10 c17">Item</span></p>
             </td>
@@ -411,7 +421,7 @@
             </td>
         </tr>
       {% for line in invoice_lines %}
-        <tr class="c4">
+        <tr class="c4 myTopBorder">
             <td class="c18" colspan="1" rowspan="1">
                 <p class="c5"><span class="c10">Mentoring session {{line.session_date}}</span></p>
             </td>

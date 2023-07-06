@@ -51,7 +51,14 @@ class SchoolClassInstance extends DbObject {
             $title .= 'COMPLETED ';
         }
         // } elif ($this->status == 'scheduled')
-        $title .= $class_data->getStudent()->getContact()->getFullName() . ' with ' . $this->getTeacher()->getContact()->getFullName();
+
+        $studentName = $class_data->getStudent()->getContact()->getFullName();
+        $teacherName = $this->getTeacher()->getContact()->getFullName();
+         
+       
+
+
+        $title .= $studentName . ' with ' . $teacherName;
         return $title; 
     }
 
