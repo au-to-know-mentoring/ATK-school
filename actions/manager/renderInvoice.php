@@ -1,5 +1,7 @@
 <?php
 
+use Laminas\Validator\StringLength;
+
 require_once('composer/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php');
 
 function renderInvoice_ALL(Web $w) {
@@ -28,7 +30,7 @@ function renderInvoice_ALL(Web $w) {
     //prepare the data
     $templateData = [];
     $invoiceTotal = 0;
-    $templateData['invoice_number'] = $invoice->invoice_number;
+    $templateData['invoice_number'] = $invoice->id;
     $templateData['billing_contact_name'] = $billingContact->getFullName();
     $templateData['billing_contact_email'] = $billingContact->email;
     $templateData['student_name'] = $student->getContact()->getFullName();
@@ -63,9 +65,23 @@ function renderInvoice_ALL(Web $w) {
     // $w->header('Cache-Control: must-revalidate');
     // $w->header('Pragma: public');
 
+    $invoice_filename = "Invoice_";
+    //$invoice->invoice_number     00000     00001   00100
+    $formattedInvoiceNumber = (string) $invoice->id;
+    for ($i = 0; $i < 5 - strlen($formattedInvoiceNumber); $i++) {
+        $invoice_filename .= "0";
+    }
+    echo "test</br>";
+    echo $invoice->id;
+    var_dump($formattedInvoiceNumber); die;
+
+
+
     $pdf = new TCPDF();
     $pdf->AddPage();
     $pdf->writeHTML($template->renderBody($templateData), true, false, true, false, '');
+
+   
 
     $pdf->Output('example_006.pdf', 'D');
 
