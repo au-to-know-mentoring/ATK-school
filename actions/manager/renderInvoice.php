@@ -71,9 +71,9 @@ function renderInvoice_ALL(Web $w) {
     for ($i = 0; $i < 5 - strlen($formattedInvoiceNumber); $i++) {
         $invoice_filename .= "0";
     }
-    echo "test</br>";
-    echo $invoice->id;
-    var_dump($formattedInvoiceNumber); die;
+    // echo "test</br>";
+    // echo $invoice->id;
+    // var_dump($formattedInvoiceNumber); die;
 
 
 
@@ -85,8 +85,8 @@ function renderInvoice_ALL(Web $w) {
 
     $pdf->Output('example_006.pdf', 'D');
 
-
-
+    // $w->setLayout(null);
+    // $w->out($template->renderBody($templateData));
 
 
 
