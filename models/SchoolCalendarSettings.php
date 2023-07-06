@@ -2,8 +2,8 @@
 
 class SchoolCalendarSettings extends DbObject {
     public $user_id;
-    public $mentor_id;
-    public $view_class;
-    public $view_availability;
+    public $teacher_id;
+    public $is_view_class;
+    public $is_view_availability;
     public $colour;
 }

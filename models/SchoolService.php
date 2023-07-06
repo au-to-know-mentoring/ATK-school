@@ -16,8 +16,8 @@ class SchoolService extends DbService {
     }
 
     public function getCalenderSettingsForUserId($user_id) {
-        return $this->GetObjects('SchoolCalenderSettings', ['user_id' => $user_id, 'is_deleted' =>0]);
-    }selec
+        return $this->GetObjects('SchoolCalendarSettings', ['user_id' => $user_id, 'is_deleted' =>0]);
+    }
 
     public function getUninvoicedClasses() {
         //get 'active' class data
@@ -194,6 +194,10 @@ class SchoolService extends DbService {
 
     public function GetSettingsForUserId($user_id) {
         return $this->GetObject('SchoolManagerSettings', ['is_deleted' => 0, 'user_id'=> $user_id]);
+    }
+
+    public function GetCalendarSettingsForUserIdAndTeacherId($user_id, $teacher_id) {
+        return $this->GetObject('SchoolCalendarSettings', ['is_deleted'=>0, 'user_id' => $user_id, 'teacher_id' => $teacher_id ]);
     }
 
     public function GetStateSelectOptions() {

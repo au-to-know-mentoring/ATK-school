@@ -2,9 +2,10 @@
 $w->enqueueStyle(array("name" => "main.css", "uri" => "/modules/school/includes/fullcalendar-5.10.0/lib/main.css", "weight" => 1010));
 $w->enqueueScript(array("name" => "main.js", "uri" => "/modules/school/includes/fullcalendar-5.10.0/lib/main.js", "weight" => 1010));
 
+
 ?>
 <style>
-  .Available {
+  /* .Available {
     background-color: green;
   }
   .Unavailable {
@@ -15,7 +16,20 @@ $w->enqueueScript(array("name" => "main.js", "uri" => "/modules/school/includes/
   }
   .Canceled {
     background-color: grey;
+  } */
+
+  <?php 
+  
+  foreach($calendar_settings as $mentor_calendar_settings){
+    echo ".teacher_" . $mentor_calendar_settings->teacher_id . " { " . "background-color: " . $mentor_calendar_settings->colour . "; } ";
   }
+
+
+  ?>
+
+
+
+
 </style>
 
 

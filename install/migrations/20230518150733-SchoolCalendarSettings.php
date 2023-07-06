@@ -17,7 +17,7 @@ class SchoolCalendarSettings extends CmfiveMigration
                 "primary_key" => "id"
             ])->addColumn($column) // add the id column
                 ->addIdColumn('user_id')
-                ->addIdColumn('mentor_id')
+                ->addIdColumn('teacher_id')
                 ->addBooleanColumn('is_view_class')
                 ->addBooleanColumn('is_view_availability')
                 ->addStringColumn('colour')

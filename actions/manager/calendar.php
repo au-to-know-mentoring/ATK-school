@@ -43,6 +43,9 @@ function calendar_ALL(Web $w) {
     $w->ctx("filter_data", $filter);
 
 
+    // Retrieve calendar settings pass calendar setting object to ctx  GET ALL new function
+    $calendar_settings = SchoolService::getInstance($w)->getCalenderSettingsForUserId($user->id);
+    $w->ctx('calendar_settings', $calendar_settings);
 
 
     // $class_instances = [];

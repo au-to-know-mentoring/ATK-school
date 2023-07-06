@@ -99,6 +99,7 @@ function classdataedit_POST(Web $w) {
         $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
     }
 
+    // var_dump($class_data); die;
     $class_data->fill($_POST);
     $class_data->student_id = $student->id;
 
