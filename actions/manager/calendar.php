@@ -34,7 +34,7 @@ function calendar_ALL(Web $w) {
         $w->ctx('teacher_id', $teacher_id);
         //$classes = SchoolService::getInstance($w)->GetAllClassDataForTeacherId($teacher_id);
         //$teacher_availability = SchoolService::getInstance($w)->GetTeacherAvailabilityForTeacherId($teacher_id);
-    }
+    } 
 
     //create filters
     $filter = [
@@ -44,7 +44,7 @@ function calendar_ALL(Web $w) {
 
 
     // Retrieve calendar settings pass calendar setting object to ctx  GET ALL new function
-    $calendar_settings = SchoolService::getInstance($w)->getCalenderSettingsForUserId($user->id);
+    $calendar_settings = SchoolService::getInstance($w)->getCalendarSettingsForUserId($user->id);
     $w->ctx('calendar_settings', $calendar_settings);
 
 

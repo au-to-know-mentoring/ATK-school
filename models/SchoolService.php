@@ -15,7 +15,7 @@ class SchoolService extends DbService {
         return $this->GetObjects('SchoolInvoice',['status' => 'sent', 'is_deleted'=>0]);
     }
 
-    public function getCalenderSettingsForUserId($user_id) {
+    public function getCalendarSettingsForUserId($user_id) {
         return $this->GetObjects('SchoolCalendarSettings', ['user_id' => $user_id, 'is_deleted' =>0]);
     }
 

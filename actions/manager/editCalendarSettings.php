@@ -85,15 +85,15 @@ function editCalendarSettings_POST(Web $w)
 
 
 
-    echo "<br><br>";
+    // echo "<br><br>";
     // seperate into each mentor
     foreach ($formData as $teacherId => $subArray) {
         // print_r($subArray); die;
         // echo "<br><br>";
-
+        echo $teacherId;
         // Get settings from datase for manager and mentor where ids match
         $calendar_settings = SchoolService::getInstance($w)->GetCalendarSettingsForUserIdAndTeacherId($user->id, $teacherId);
-        
+        // print_r($calendar_settings);
         
 
         // if there is no saved settings create new calendar settings object
@@ -122,6 +122,6 @@ function editCalendarSettings_POST(Web $w)
 
         $calendar_settings->colour = $subArray['colour'];
         $calendar_settings->insertOrUpdate();
-        $w->msg("Calender settings set successfully", 'school-manager/calendar');
     }
+    $w->msg("Calender settings set successfully", 'school-manager/calendar');
 }
