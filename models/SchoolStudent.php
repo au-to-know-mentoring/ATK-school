@@ -11,6 +11,10 @@ class SchoolStudent extends DbObject {
         return AuthService::getInstance($this->w)->getContact($this->contact_id);
     }
 
+    public function getFullName() {
+        return $this->getContact()->getFullName();
+    }
+
     public function getMainContactMapping() {
         return SchoolService::getInstance($this->w)->GetObject("SchoolStudentContactMapping",['is_deleted'=>0,'student_id'=>$this->id,'is_main_contact'=>1]);
     }
