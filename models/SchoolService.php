@@ -59,6 +59,34 @@ class SchoolService extends DbService {
         return $this->getObjects('SchoolInvoiceLine', ['invoice_id' => $invoice_id, 'is_deleted' => 0]);
     }
 
+    public function getInvoicesForFilter($status = "Paid", $student_id, $date_sent_range_start, $date_sent_range_end) {
+        $where = [
+            'is_deleted' => 0,
+            'status' => $status,
+            
+        ];
+        if (empty($student_id)) {
+            return [];
+        }
+
+        if (!empty($student_id) && $student_id != 'all') {
+            $where['student_id'] = $student_id;
+        }
+        if(!empty($date_sent_range_start)) {
+            //$dt_from = new DateTime($date_sent_range_start,);
+            $dt_from = new DateTime(str_replace('/', '-', $date_sent_range_start));
+            //str_replace('/', '-', $_POST['start_date'])
+            //echo $dt_from->format('Y-m-d H:i:s');
+            $where['dt_paid >= ?'] = $dt_from->format('Y-m-d H:i:s'); // $dt_from->getTimestamp(); //
+        }
+        if(!empty($date_sent_range_end)) {
+            $dt_to = new DateTime(str_replace('/', '-', $date_sent_range_end));
+            $where['dt_paid <= ?'] = $dt_to->format('Y-m-d 23:59:59');
+        }
+
+        return $this->getObjects('SchoolInvoice', $where);
+    }
+
     // returns all example item instances
     public function GetAllTeachers() {
         $teachers = $this->GetObjects('SchoolTeacher',['is_deleted'=>0]);
@@ -97,6 +125,16 @@ class SchoolService extends DbService {
     // returns a single example item matching the given id
     public function GetStudentForId($id) {
         return $this->GetObject('SchoolStudent',$id);
+    }
+
+    public function getStudentSelectOptions() {
+        $students = $this->GetAllStudents();
+        $options = [];
+        $options[] = ["All Participants", "all"];
+        foreach ($students as $student) {
+            $options[] = [$student->getFullName(), $student->id];
+        }
+        return $options;
     }
 
     public function GetAllStudentsForTeacherId($teacher_id) {
@@ -166,6 +204,13 @@ class SchoolService extends DbService {
     // returns a single example item matching the given id
     public function GetClassInstancesForId($id) {
         return $this->GetObject('SchoolClassInstance',$id);
+    }
+
+    public function getPastClassInstancesByStatus($status) {
+        //'dt_class_date <= ?'=>date('Y-m-d 00:00:00',strtotime($dateArray['end']))
+        $date = date('Y-m-d 00:00:00', Time());
+
+        return $this->getObjects('SchoolClassInstance', ['is_deleted'=>0, 'status'=>$status, 'dt_class_date <= ?'=>$date]);
     }
 
     public function GetAllStudentContactsForStudentId($student_id) {

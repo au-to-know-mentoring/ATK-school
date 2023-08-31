@@ -17,6 +17,7 @@ function viewInvoice_ALL(Web $w) {
     }
 
     $w->ctx('invoice_id', $invoice->id);
+    $w->ctx("invoice", $invoice);
 
     $student = $invoice->getStudent();
     $billing_contact = $student->getBillingContact();
@@ -55,7 +56,7 @@ function viewInvoice_ALL(Web $w) {
     $invoice_lines = $invoice->getLineItems();
 
     $lines_table = [];
-    $lines_table_headers = ['Class Date', 'Mentor', 'Duration', 'Amount', 'Rate', 'Actions'];
+    $lines_table_headers = ['Class Date', 'Mentor', 'Duration',  'Rate', 'Amount', 'Actions'];
     if (!empty($invoice_lines)) {
         foreach($invoice_lines as $line) {
             $session = SchoolService::getInstance($w)->GetClassInstancesForId($line->class_instance_id);
@@ -64,9 +65,9 @@ function viewInvoice_ALL(Web $w) {
             $row[] = date('d/m/Y h:i', $session->dt_class_date);
             $row[] = $session->getTeacher()->getContact()->getFullName();
             $row[] = $class_data->duration;
-            
-            $row[] = $line->amount;
             $row[] = $class_data->rate;
+            $row[] = $line->amount;
+            
             $actions = [];
             $actions[] = Html::b('/school-manager/editInvoiceLine/' . $line->id, 'Edit');
 

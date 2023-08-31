@@ -1,21 +1,22 @@
 <?php
 
-use Laminas\Validator\StringLength;
+function generateInvoicePDF_ALL(Web $w) {
 
-require_once('composer/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php');
-
-function renderInvoice_ALL(Web $w)
-{
-    $p = $w->pathMatch('invoice_id');
-
+    $w->setLayout(null);
+    //check if user is a manager
+    $user = AuthService::getInstance($w)->user();
+    if (!$user->hasRole("school_manaer")) {
+        $w->error("you do not have permission to complate this action", "/school");
+    }
+    
+    $p = $w->pathMatch("invoice_id");
     if (empty($p['invoice_id'])) {
-        $w->error('No id provided', '/school-manager/invoices');
+        $w->error("no invoice id provided", "school-manager/invoices");
     }
 
-    //get the invoice
     $invoice = SchoolService::getInstance($w)->getInvoiceForId($p['invoice_id']);
     if (empty($invoice)) {
-        $w->error('No invoice found for id', '/school-manager/invoices');
+        $w->error("no invoice found for id", "school-manager/invoices");
     }
 
     //get the student and billing contact
@@ -49,48 +50,18 @@ function renderInvoice_ALL(Web $w)
     }
     $templateData['invoice_total'] = $invoiceTotal;
 
-
-
-    // $w->header('Content-Description: File Transfer');
-    // $w->header(
-    //     'Content-Type: '
-    //         . "application/octet-stream" 
-    //         // . (empty($att->mimetype) ? "application/octet-stream" : $att->mimetype)
-    // );
-    // $w->header(
-    //     'Content-Disposition: attachment; filename="'
-    //         . 'test.pdf' . '"'
-    //         // . ($saveAs ?? $att->filename) . '"'
-    // );
-    // $w->header('Expires: 0');
-    // $w->header('Cache-Control: must-revalidate');
-    // $w->header('Pragma: public');
-
     $invoice_filename = "Invoice_";
     //$invoice->invoice_number     00000     00001   00100
     $formattedInvoiceNumber = (string) $invoice->id;
     for ($i = 0; $i < 5 - strlen($formattedInvoiceNumber); $i++) {
         $invoice_filename .= "0";
     }
-    // echo "test</br>";
-    // echo $invoice->id;
-    // var_dump($formattedInvoiceNumber); die;
-    // Extend the TCPDF class to create custom Header and Footer
+
+    $invoice_filename .= $invoice->id . ".pdf";
+
+
     class MYPDF extends TCPDF
     {
-
-        //Page header
-        // public function Header()
-        // {
-        //     // Logo
-        //     $image_file = K_PATH_IMAGES . 'logo_example.jpg';
-        //     $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        //     // Set font
-        //     $this->SetFont('helvetica', 'B', 20);
-        //     // Title
-        //     $this->Cell(0, 15, '<< TCPDF Example 003 >>', 0, false, 'C', 0, '', 0, false, 'M', 'M');
-        // }
-
         // Page footer
         public function Footer()
         {
@@ -103,26 +74,40 @@ function renderInvoice_ALL(Web $w)
         }
     }
 
-
     $pdf = new MYPDF();
     $pdf->AddPage();
     $pdf->writeHTML($template->renderBody($templateData), true, false, true, false, '');
 
+    //generate the file path
+    $filesystemPath = "attachments/" . $invoice->getDbTableName() . '/' . date('Y/m/d') . '/' .             $invoice->id . '/';
+    $filesystem = FileService::getInstance($w)->getFilesystem(FileService::getInstance($w)->getFilePath($filesystemPath));
+    if (empty($filesystem)) {
+        LogService::getInstance($w)->setLogger("SCHOOL_INVOICE")->error("Cannot save file, no filesystem returned");
+        return null;
+    }
+    $fullpath = FILE_ROOT . str_replace(FILE_ROOT, "", $filesystemPath . $invoice_filename);
+    //var_dump(FILE_ROOT . str_replace(FILE_ROOT, "", $filesystemPath . $invoice_filename)); 
+    //$fullpath = ltrim($fullpath, '/');
 
+    //ob_clean();
+    //$pdf->Output($fullpath, 'F');
+    $attachments = FileService::getInstance($w)->getAttachments($invoice);
+    if (!empty($attachments)) {
+        //remove attachments with matching name
+        foreach ($attachments as $attachment) {
+            // echo $attachment->filename;
+            // echo '</br>';
+            // echo $invoice_filename;
+            // echo '</br>';
+            if ($attachment->filename == $invoice_filename) {
+                //delete attachment
+                $attachment->delete();
+            }
+        }
+    }
+    
 
-    $pdf->Output('example_006.pdf', 'D');
+    FileService::getInstance($w)->saveFileContent($invoice, $pdf->Output("", 'S'), $invoice_filename, $type_code = null, $content_type = null, $description = null);
 
-    // $w->setLayout(null);
-    // $w->out($template->renderBody($templateData));
-
-
-
-
-
-
-    //$w->out($template->renderBody($templateData));
-
-
-
-
+    $w->msg("Invoice PDF Generated", "/school-manager/viewInvoice/" . $invoice->id . "#attachments");
 }
