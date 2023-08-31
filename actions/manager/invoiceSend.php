@@ -65,7 +65,12 @@ function invoiceSend_ALL(Web $w) {
         $w->error("No billing contact found for " . $invoice_student->getFullName(), '/school-manager/viewInvoice/' . $invoice->id);
     }
 
-    $subject = "test subject: invoice " . $invoice->id;
+    //get email template and render
+
+    $email_template = TemplateService::getInstance($w)->findTemplate('school', 'invoice_email');
+
+    $subject = $email_template->renderTitle(); //add data
+    //"test subject: invoice " . $invoice->id;
     $output = "dear test, test test";
 
     // var_dump($billingContactMapping->getContact()->email);

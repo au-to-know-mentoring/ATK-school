@@ -16,12 +16,13 @@ function settings_GET(Web $w) {
     }
 
     $form = [
-        'settings' => [
+        'User Settings' => [
             [
                 ['State', 'select', 'state', $settings->state, SchoolService::getInstance($w)->GetStateSelectOptions()],
                 ['TimeZone', 'select', 'timezone', $settings->timezone, SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
             ]
-        ]
+        ],
+        
     ];
 
     $w->ctx('form', Html::multiColForm($form,'/school-manager/settings'));
