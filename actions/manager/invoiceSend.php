@@ -32,9 +32,12 @@ function invoiceSend_ALL(Web $w) {
         $invoice_filename = "Invoice_";
         //$invoice->invoice_number     00000     00001   00100
         $formattedInvoiceNumber = (string) $invoice->id;
+        $templateInvoiceNumber = '';
         for ($i = 0; $i < 5 - strlen($formattedInvoiceNumber); $i++) {
             $invoice_filename .= "0";
+            $templateInvoiceNumber .= '0';
         }
+        $templateInvoiceNumber .= $invoice->id;
 
         $invoice_filename .= $invoice->id . ".pdf";
         foreach ($attachments as $attachment) {
@@ -69,9 +72,9 @@ function invoiceSend_ALL(Web $w) {
 
     $email_template = TemplateService::getInstance($w)->findTemplate('school', 'invoice_email');
 
-    $subject = $email_template->renderTitle(); //add data
+    $subject = $email_template->renderTitle(["invoice_number"=>$templateInvoiceNumber, "participant_full_name"=>$invoice_student->getFullName()]); //add data
     //"test subject: invoice " . $invoice->id;
-    $output = "dear test, test test";
+    $output = $email_template->renderBody();
 
     // var_dump($billingContactMapping->getContact()->email);
     // die;
