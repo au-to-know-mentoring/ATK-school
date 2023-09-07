@@ -100,6 +100,7 @@ function classdataedit_POST(Web $w) {
     }
 
     // var_dump($class_data); die;
+    // var_dump($_POST); die;
     $class_data->fill($_POST);
     $class_data->student_id = $student->id;
 
@@ -142,7 +143,9 @@ function classdataedit_POST(Web $w) {
         $class_data->dt_end_date = $end_dt_object->format('Y-m-d H:i:s');
     }
 
+    // print_r($class_data); die;
     $class_data->insertOrUpdate();
+
     
     $msg = "class data saved";
 

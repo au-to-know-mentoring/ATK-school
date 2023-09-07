@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!empty($teacher_id)) {
         echo Html::b('/school-teacher/editavailability/teacher/' . $teacher_id, 'Add New Availability for ' . SchoolService::getInstance($w)->GetTeacherForId($teacher_id)->getFullName());
     }
-    echo Html::box("/school-manager/editCalendarSettings", "Calendar Settings", true);
-    echo Html::box("/school-manager/editCustomCalendar", "Add Custom Calendar", true);
-    echo Html::box("/school-manager/editCalendarEvent", "Add Calendar Event", true);
+    echo Html::box("/school-manager/editcalendarsettings", "Calendar Settings", true);
+    echo Html::box("/school-manager/addcustomcalendar", "Add Custom Calendar", true);
+    echo Html::box("/school-manager/editcustomcalendarevent", "Add Calendar Event", true);
 ?>
 
 <div id='calendar'></div>

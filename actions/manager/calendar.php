@@ -47,7 +47,9 @@ function calendar_ALL(Web $w) {
     $calendar_settings = SchoolService::getInstance($w)->getCalendarSettingsForUserId($user->id);
     $w->ctx('calendar_settings', $calendar_settings);
 
-
+    // Retrieve custom calendar settings pass calendar setting object to ctx  GET ALL new function
+    $cust_cal_settings = SchoolService::getInstance($w)->getCustomCalendarSettingsForUserId($user->id);
+    $w->ctx('cust_cal_settings', $cust_cal_settings);
     // $class_instances = [];
 
     // foreach ($classes as $class) {

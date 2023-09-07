@@ -37,7 +37,7 @@ function editavailability_GET(Web $w) {
     $loginUser = AuthService::getInstance($w)->user();
     
     // AuthService::getInstance($w)->user()->hasRole('school_teacher')
-    if($loginUser->hasRole('school_teacher')) {
+    if(!$loginUser->hasRole('school_manager')) {
         if ($p['object_type'] == "teacher" && $loginUser->id != $object->user_id) {  
             $w->error("Teacher IDs don't match", "/school");
         }

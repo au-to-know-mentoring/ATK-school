@@ -79,6 +79,7 @@ function teacheredit_POST(Web $w)
         $w->error(implode("<br/>\n", $errors), "/school-manager/teacherlist");
     }
 
+    // var_dump($_POST); die;
     $contact->fill($_POST);
 
     $contact->insertOrUpdate();
