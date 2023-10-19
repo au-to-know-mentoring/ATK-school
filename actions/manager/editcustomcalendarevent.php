@@ -10,11 +10,11 @@ function editcustomcalendarevent_GET(Web $w)
 
     $custom_calendar_names = [];
 
-    foreach (SchoolService::getInstance($w)->GetAllCustomCalendars() as $calendars) {
+    foreach (SchoolService::getInstance($w)->GetAllCustomCalendars() as $calendar) {
         //
-        array_push($custom_calendar_names, $calendars->calendar_name);
-        // var_dump($calendars->calendar_name); die;
-        // WILL THIS NEED CHANGING? 
+        array_push($custom_calendar_names, $calendar->calendar_name);
+
+        // var_dump($calendar->calendar_name); die;
 
     }
 
@@ -23,9 +23,12 @@ function editcustomcalendarevent_GET(Web $w)
     $form = [
         'Custom Calendar Event Settings' => [
             [
-                ["Calendar Name", "select", "calendar_name", $calendars->calendar_name, $custom_calendar_names],
+                ["Calendar Name", "select", "calendar_name", $calendar->calendar_name, $custom_calendar_names],
 
                 (new \Html\Form\InputField\Text())->setLabel('Event Name')->setName("event_name")->setPlaceholder("Enter event name")->setRequired('true'),
+            ],
+            [
+                (new \Html\Form\InputField\Text())->setValue()->setName('custom_calendar_id')->setType('hidden'),
             ],
             [
                 (new \Html\Form\Textarea())->setLabel('Event Description')->setName("event_description")->setPlaceholder("Enter event description")->setRequired('true'),
@@ -72,6 +75,8 @@ function editcustomcalendarevent_GET(Web $w)
 
 function editcustomcalendarevent_POST(Web $w)
 {
+
+    // var_dump($_POST); die;
     // $p = TO BE CONTINUED
     $user = AuthService::getInstance($w)->user();
 
@@ -81,6 +86,7 @@ function editcustomcalendarevent_POST(Web $w)
 
     $calendar_event = new SchoolCustomCalendarEvent($w);
     $calendar_event->fill($_POST);
+    // var_dump($calendar_event->custom_calendar_id); die;
     $redirect = '/school-manager/calendar/';
 
     try {

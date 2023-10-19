@@ -5,13 +5,13 @@ $w->enqueueScript(array("name" => "main.js", "uri" => "/modules/school/includes/
 
 ?>
 <style>
-  /* .Available {
+  .Available {
     background-color: green;
   }
   .Unavailable {
     background-color: red;
-  }
-  .Late {
+  } 
+  /*.Late {
     background-color: orange;
   }
   .Canceled {

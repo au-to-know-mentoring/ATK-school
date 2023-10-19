@@ -193,7 +193,7 @@ class SchoolService extends DbService {
     }
 
     public function GetAllTeacherAvailability() {
-        return $this->GetObjects('SchoolTeacherAvailability',['is_deleted'=>0]);
+        return $this->GetObjects('SchoolTeacherAvailability',['is_deleted'=>0, 'object_type'=>'teacher']);
     }
 
     public function GetTeacherAvailabilityForId($id) {
