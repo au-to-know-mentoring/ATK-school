@@ -13,13 +13,20 @@ function generateInvoicePDF_ALL(Web $w) {
     if (empty($p['invoice_id'])) {
         $w->error("no invoice id provided", "school-manager/invoices");
     }
-
+    
     $invoice = SchoolService::getInstance($w)->getInvoiceForId($p['invoice_id']);
     if (empty($invoice)) {
         $w->error("no invoice found for id", "school-manager/invoices");
     }
 
-    //get the student and billing contact
+    
+    $date = $invoice->dt_sent;
+    if (empty($date)) {
+     $date = new DateTime();
+    }
+    // var_dump($date);
+    // die;
+   
     $student = $invoice->getStudent();
     $billingContact = $student->getBillingContact();
 
@@ -28,10 +35,11 @@ function generateInvoicePDF_ALL(Web $w) {
 
     //get the template
     $template = TemplateService::getInstance($w)->findTemplate('school', 'invoice');
-
+    
     //prepare the data
     $templateData = [];
     $invoiceTotal = 0;
+    $templateData['date_time'] = $date->format("d/m/y");
     $templateData['invoice_number'] = $invoice->id;
     $templateData['billing_contact_name'] = $billingContact->getFullName();
     $templateData['billing_contact_email'] = $billingContact->email;
@@ -41,6 +49,7 @@ function generateInvoicePDF_ALL(Web $w) {
         $class_instance = $lineItem->GetClassInstance();
         $class_data = $class_instance->getClassData();
         $line = [];
+        $line['teacher_name'] = $class_instance->getTeacher()->getFullName();
         $line['session_date'] = $class_instance->GetFormattedDate();
         $line['duration'] = $class_data->duration;
         $line['rate'] = $class_data->rate;

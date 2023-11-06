@@ -44,7 +44,7 @@ function studentview_ALL(Web $w) {
     //smaple time for student
     $time = null;
     if (!empty($student->timezone)) {
-        $time = new DateTime(NULL, new DateTimeZone($student->timezone));
+        $time = new DateTime("now", new DateTimeZone($student->timezone));
     }
     
 

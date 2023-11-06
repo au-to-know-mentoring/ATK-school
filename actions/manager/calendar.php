@@ -6,7 +6,7 @@ function calendar_ALL(Web $w) {
     $w->ctx("user", $user);
     $teacher = '';
     $classes = [];
-    $reset = $w->request("reset");
+    $reset = $w->sessionOrRequest('reset');
 
     if ($user->hasRole('school_manager')) {
         //$students = SchoolService::getInstance($w)->GetAllStudents();

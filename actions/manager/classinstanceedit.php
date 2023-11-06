@@ -140,7 +140,9 @@ function classinstanceedit_POST(Web $w) {
     $dt_object = new DateTime();
     $dt_object->setTimestamp($time_object->getTimestamp());
     $class_instance->dt_class_date = $dt_object->format('Y-m-d H:i:s');
-
+    if ($class_instance->substitute_teacher_id == '') {
+        $class_instance->substitute_teacher_id = null;
+    }
     $class_instance->insertOrUpdate();
 
     $w->msg('Session updated', '/school-manager/viewclassinstance/' . $class_instance->id);

@@ -77,7 +77,7 @@ function invoices_ALL(Web $w) {
     //paid invoices
 
     // Look for reset
-    $reset = $w->request("reset");
+    $reset = $w->sessionOrRequest("reset");
     if (empty($reset)) {
         // Get filter values
         $student_id = $w->sessionOrRequest("school__student-id", null);

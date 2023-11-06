@@ -307,7 +307,7 @@ class SchoolService extends DbService {
                 // Lets sample the time there right now
                 $dtz = new DateTimeZone($timezone);
                 
-                $time = new DateTime(NULL, $dtz);
+                $time = new DateTime("now", $dtz);
                 //var_dump($time->format('T')); echo "<br>";
                 // Us dumb Americans can't handle millitary time
                 $ampm = $time->format('H') > 12 ? ' ('. $time->format('g:i a'). ')' : '';
@@ -334,7 +334,7 @@ class SchoolService extends DbService {
         
 
 
-        if ($w->Auth->loggedIn()) {
+        if (AuthService::getInstance($w)->loggedIn()) {
             $user = AuthService::getInstance($w)->user();
             // manager menu links
             if ($user->hasRole('school_manager')) {

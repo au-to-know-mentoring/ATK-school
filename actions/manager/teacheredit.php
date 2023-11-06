@@ -75,9 +75,9 @@ function teacheredit_POST(Web $w)
     if ($_REQUEST['password2'] != $_REQUEST['password']) {
         $errors[] = "Passwords don't match";
     }
-    if (sizeof($errors) != 0) {
-        $w->error(implode("<br/>\n", $errors), "/school-manager/teacherlist");
-    }
+     if (sizeof($errors) != 0) {
+         $w->error(implode("<br/>\n", $errors), "/school-manager/teacherlist");
+     }
 
     $contact->fill($_POST);
 

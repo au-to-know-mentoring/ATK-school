@@ -15,13 +15,14 @@ class SchoolClassInstance extends DbObject {
     public function getClassData() {
         return SchoolService::getInstance($this->w)->GetClassDataForId($this->class_data_id);
     }
-
+   
     public function getTeacher() {
         if (!empty($this->substitute_teacher_id)) {
             return SchoolService::getInstance($this->w)->GetTeacherForId($this->substitute_teacher_id);
         } else {
-            return $this->getClassData()->getTeacher();
+            
         }
+        return $this->getClassData()->getTeacher();
     }
 
     public function getStudent() {
