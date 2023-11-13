@@ -50,23 +50,28 @@ function editcalendarsettings_GET(Web $w)
 
     foreach (SchoolService::getInstance($w)->getAllCustomCalendars() as $customCalendar) {
 
-        $custom_calendar_settings = SchoolService::getInstance($w)->GetCustomCalendarSettingsForUserIdAndCalendarName($user->id, str_replace(" ", "_", $customCalendar->calendar_name));
+        // var_dump($customCalendar->id);
+
+        $custom_calendar_settings = SchoolService::getInstance($w)->GetCustomCalendarSettingsForUserIdAndCalendarId($user->id, $customCalendar->id);
+        // var_dump($custom_calendar_settings); die;
         // print_r($customCalendar->calendar_name); 
         // print_r($custom_calendar_settings);
 
+
+        // If Settings empty make new custom calendar settings for each custom calendar
         if (empty($custom_calendar_settings)) {
             $custom_calendar_settings = new SchoolCustomCalendarSettings($w);
         }
         // print_r($customCalendar->calendar_name); die;
         $custom_calendar_array[] = [
-            (new \Html\Form\InputField\Text())->setLabel('Custom Calendar')->setValue($customCalendar->calendar_name)->setDisabled(true)->setName('custCalName-' . str_replace(" ", "_", $customCalendar->calendar_name)),
+            (new \Html\Form\InputField\Text())->setLabel('Custom Calendar')->setValue($customCalendar->calendar_name)->setDisabled(true)->setName('custCalName-' . $customCalendar->id),
 
             // (new \Html\Form\InputField\Text())->setValue($customCalendar->calendar_name)->setName('custCalName-' . str_replace()->setType('hidden'),
 
 
-            (new \Html\Form\InputField\Checkbox())->setLabel('View Calendars')->setName('isView-' . $customCalendar->calendar_name)->setChecked($custom_calendar_settings->is_view_calendar),
+            (new \Html\Form\InputField\Checkbox())->setLabel('View Calendars')->setName('isView-' . $customCalendar->id)->setChecked($custom_calendar_settings->is_view_calendar),
             
-            (new \Html\Form\InputField\Color())->setLabel('Select colour')->setName('colour-' . $customCalendar->calendar_name)->setValue($custom_calendar_settings->colour),
+            (new \Html\Form\InputField\Color())->setLabel('Select colour')->setName('colour-' . $customCalendar->id)->setValue($custom_calendar_settings->colour),
         ];
     }
     // die;
@@ -76,6 +81,7 @@ function editcalendarsettings_GET(Web $w)
         'Custom Calendars' => $custom_calendar_array
     ];
 
+    // var_dump($custom_calendar_array); die;
     // var_dump($form); die;
 
     $w->out(Html::multiColForm($form, '/school-manager/editcalendarsettings', "POST", "Apply"));
@@ -85,6 +91,7 @@ function editcalendarsettings_POST(Web $w)
 {
     $user = AuthService::getInstance($w)->user();
 
+    // if user isnt manager error
     if (!$user->hasRole('school_manager')) {
         $w->error('Cannot view page');
     }
@@ -120,8 +127,8 @@ function editcalendarsettings_POST(Web $w)
 
         if (count($fieldArray2) == 2) {
             // var_dump($value . "</br>");
-            $custCalName = $fieldArray2[1];
-            $CustCalSettingsFormData[$custCalName][$fieldArray2[0]] = $value;
+            $custCalId  = $fieldArray2[1];
+            $CustCalSettingsFormData[$custCalId][$fieldArray2[0]] = $value;
         }
     }
 
@@ -179,8 +186,8 @@ function editcalendarsettings_POST(Web $w)
 
     // echo "</br></br>";
     // print_r($subArray); die;
-    foreach($CustCalSettingsFormData as $calendarName => $subArray) {
-        $cust_cal_settings = SchoolService::getInstance($w)->GetCustomCalendarSettingsForUserIdAndCalendarName($user->id, $calendarName);
+    foreach($CustCalSettingsFormData as $calendarId => $subArray) {
+        $cust_cal_settings = SchoolService::getInstance($w)->GetCustomCalendarSettingsForUserIdAndCalendarId($user->id, $calendarId);
 
         // print_r($CustCalSettingsFormData); die; 
         if(empty($cust_cal_settings)) {
@@ -197,7 +204,7 @@ function editcalendarsettings_POST(Web $w)
         }
         $cust_cal_settings->colour = $subArray['colour'];
 
-        $cust_cal_settings->custom_calendar_name = $calendarName;
+        $cust_cal_settings->custom_calendar_id = $calendarId;
 
         $cust_cal_settings->insertOrUpdate();
     }

@@ -31,6 +31,12 @@ class SchoolService extends DbService {
         return $this->getObjects('SchoolCustomCalendarEvent', ['is_deleted' =>0]);
     }
 
+    public function getAllCustomCalendarEventsByCalendarIdAndRange($custom_calendar_id, $dateArray) {
+        return $this->getObjects('SchoolCustomCalendarEvent', ['is_deleted'=>0,
+         'custom_calendar_id' => $custom_calendar_id,
+         'dt_start_time <= ?' => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
+    }
+
     public function getUninvoicedClasses() {
         //get 'active' class data
         $active_classes = $this->GetAllActiveClassData();
@@ -212,8 +218,8 @@ class SchoolService extends DbService {
         return $this->GetObject('SchoolCalendarSettings', ['is_deleted'=>0, 'user_id' => $user_id, 'teacher_id' => $teacher_id ]);
     }
 
-    public function GetCustomCalendarSettingsForUserIdAndCalendarName($user_id, $cust_cal_name) {
-        return $this->GetObject('SchoolCustomCalendarSettings', ['is_deleted'=>0, 'user_id' => $user_id, 'custom_calendar_name' => $cust_cal_name ]);
+    public function GetCustomCalendarSettingsForUserIdAndCalendarId($user_id, $cust_cal_id) {
+        return $this->GetObject('SchoolCustomCalendarSettings', ['is_deleted'=>0, 'user_id' => $user_id, 'custom_calendar_id' => $cust_cal_id ]);
     }
 
     public function GetStateSelectOptions() {

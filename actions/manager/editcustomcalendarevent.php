@@ -19,7 +19,6 @@ function editcustomcalendarevent_GET(Web $w)
     }
 
     // foreach (SchoolService::getInstance($w)->getAllCustomCalendarEvents() as $calendarEvents) {
-
     $form = [
         'Custom Calendar Event Settings' => [
             [
@@ -28,7 +27,7 @@ function editcustomcalendarevent_GET(Web $w)
                 (new \Html\Form\InputField\Text())->setLabel('Event Name')->setName("event_name")->setPlaceholder("Enter event name")->setRequired('true'),
             ],
             [
-                (new \Html\Form\InputField\Text())->setValue()->setName('custom_calendar_id')->setType('hidden'),
+                (new \Html\Form\InputField\Text())->setValue($calendar->id)->setName('custom_calendar_id')->setType('hidden'),
             ],
             [
                 (new \Html\Form\Textarea())->setLabel('Event Description')->setName("event_description")->setPlaceholder("Enter event description")->setRequired('true'),
@@ -70,7 +69,7 @@ function editcustomcalendarevent_GET(Web $w)
     //var_dump($form); die;
 
     // What is calendaroptions
-    $w->out(Html::multiColForm($form, '/school-manager/editcustomcalendarevent'/* add event id */, "POST", "Apply"));
+    $w->out(Html::multiColForm($form, '/school-manager/editcustomcalendarevent', "POST", "Apply"));
 }
 
 function editcustomcalendarevent_POST(Web $w)
@@ -86,6 +85,7 @@ function editcustomcalendarevent_POST(Web $w)
 
     $calendar_event = new SchoolCustomCalendarEvent($w);
     $calendar_event->fill($_POST);
+
     // var_dump($calendar_event->custom_calendar_id); die;
     $redirect = '/school-manager/calendar/';
 

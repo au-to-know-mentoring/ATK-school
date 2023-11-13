@@ -7,8 +7,7 @@ function myfeed_ALL(Web $w)
     $p = $w->pathMatch('teacher_id');
     $user = AuthService::getInstance($w)->user();
     $calSettings = SchoolService::getInstance($w)->getCalendarSettingsForUserId($user->id);
-    $custCalendarSettings = SchoolService::getInstance($w)->getCustomCalendarSettingsForUserId($user->id);
-    
+    $custom_calendar_settings = SchoolService::getInstance($w)->getCustomCalendarSettingsForUserId($user->id);
     $applySettings = false;
     // var_dump($calSettings); die;
 
@@ -18,7 +17,7 @@ function myfeed_ALL(Web $w)
     //     var_dump($mentorSettings->teacher_id);
     //     echo "<br><br>";
     // } die;
-    
+
 
     $calendarSettingsByTeacherId = [];
 
@@ -29,16 +28,16 @@ function myfeed_ALL(Web $w)
 
     // var_dump($calendarSettingsByTeacherId); die;
     $teacher_availability = [];
+
     if (empty($p['teacher_id'])) {
         $classes = SchoolService::getInstance($w)->GetAllClassDataForDateRange($_REQUEST);
         $teacher_availability = SchoolService::getInstance($w)->GetAllTeacherAvailability();
-        $custom_calendars = SchoolService::getInstance($w)->getAllCustomCalendars();
         // var_dump($teacher_availability); die;
+
         $applySettings = true;
     } else {
         $classes = SchoolService::getInstance($w)->GetAllClassDataForTeacherIdAndDateRange($p['teacher_id'], $_REQUEST);
         $teacher_availability = SchoolService::getInstance($w)->GetTeacherAvailabilityForTeacherId($p['teacher_id']);
-        $custom_calendars = SchoolService::getInstance($w)->getCustomCalendarSettingsForUserId($user->id);
     }
 
     // echo "<pre>";
@@ -122,7 +121,7 @@ function myfeed_ALL(Web $w)
             $is_visible = true;
 
             if ($applySettings) {
-            
+
                 if (!empty($calendarSettingsByTeacherId[$availability->object_id])) {
 
                     $is_visible =  $calendarSettingsByTeacherId[$availability->object_id]->is_view_availability;
@@ -143,29 +142,61 @@ function myfeed_ALL(Web $w)
         }
     }
 
-    // Custom Calendar
 
-    if(!empty($custom_calendars)) {
-        foreach($custom_calendars as $calendar){
-        $is_visible = true;
 
-        if($applySettings) {
-            if(!empty($custCalendarSettings)) {
-                foreach($custCalendarSettings as $setting){
-                $is_visible = $setting->is_view_calendar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Should custom calendars be visibile
+    // Check we are NOT viewing teacher calendar by viewing if path is empty 
+    // Use apply settings variable to check if calendar event should be viewed by setting
+    if ($applySettings) {
+        // Check if there are settings
+        if (!empty($custom_calendar_settings)) {
+            // var_dump($custom_calendar_settings); die;
+
+            // Loop through settings
+            foreach ($custom_calendar_settings as $custom_calendar_setting) {
+                $is_visible = $custom_calendar_setting->is_view_calendar;
+
+                // Check if calendar is visible in settings get event
+                if ($is_visible) {
+                    // var_dump($_REQUEST); die;
+                    $event_setting = SchoolService::getInstance($w)->getAllCustomCalendarEventsByCalendarIdAndRange($custom_calendar_setting->custom_calendar_id, $_REQUEST);
+                    // var_dump($custom_calendar_setting); die;
+                    var_dump($event_setting); die;
                 }
             }
         }
-        if($is_visible) {
-
-            $custCalEvents = $calendar->getAllEventsForCalendarIdAndDateRange($calendar->id, $_REQUEST);
+    }
 
 
-            var_dump($custCalEvents);
-            // var_dump($_REQUEST); die;
-        }
-    } die;
-}
+
+
+    // build events into array and add to calendar events array
+
 
     $w->out(json_encode($calendarEvents));
 }

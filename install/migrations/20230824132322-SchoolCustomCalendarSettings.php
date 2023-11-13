@@ -16,7 +16,7 @@ class SchoolCustomCalendarSettings extends CmfiveMigration
                 "primary_key" => "id"
             ])->addColumn($column) // add the id column
                 ->addIdColumn('user_id')
-                ->addStringColumn('custom_calendar_name')
+                ->addIdColumn('custom_calendar_id')
                 ->addBooleanColumn('is_view_calendar')
                 ->addStringColumn('colour')
                 ->addCmfiveParameters() // this function adds some standard columns used in cmfive. dt_created, dt_modified, creator_id, modifier_id, and is_deleted.
