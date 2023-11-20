@@ -9,12 +9,12 @@ function teacheredit_GET(Web $w)
         $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['id']);
         $user = $teacher->getUser();
         $contact = $user->getContact();
-        $w->ctx("title","Edit Teacher");
+        $w->ctx("title","Edit Mentor");
     } else {
         $teacher = new SchoolTeacher($w);
         $user = new User($w);
         $contact = new Contact($w);
-        $w->ctx("title","Add Teacher");
+        $w->ctx("title","Add Mentor");
     }
 
     $form = [
@@ -37,7 +37,7 @@ function teacheredit_GET(Web $w)
                 ["Email", "text", "email", $contact->email]
             ]
         ], 
-        "Teacher Data" => [
+        "Mentor Data" => [
             [
                 (new \Html\Form\InputField\Number())->setLabel("Max Student Capacity")->setName("max_students")->setValue($teacher->max_students)
                 
@@ -71,10 +71,11 @@ function teacheredit_POST(Web $w)
         $user = new User($w);
         $contact = new Contact($w);
     }
-
+    $errors = [];
     if ($_REQUEST['password2'] != $_REQUEST['password']) {
         $errors[] = "Passwords don't match";
     }
+
      if (sizeof($errors) != 0) {
          $w->error(implode("<br/>\n", $errors), "/school-manager/teacherlist");
      }

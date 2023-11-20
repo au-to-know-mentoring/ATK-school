@@ -39,7 +39,12 @@ function studentview_ALL(Web $w) {
     if (!empty($main_contact_mapping)) {
         $main_contact = $main_contact_mapping->getContact();
     }
-    
+    $secondary_contact_mapping = $student->getSecondaryContactMapping();
+    $Secondary_is_billing = false;
+
+    if (!empty($secondary_contact_mapping) && $secondary_contact_mapping->is_billing_contact) {
+        $Secondary_is_billing = true;
+    }
 
     //smaple time for student
     $time = null;
@@ -50,7 +55,7 @@ function studentview_ALL(Web $w) {
 
 
     $studentData = [
-        "Student Details" => [
+        "Participent Details" => [
             [
                 ["Home Phone", "text", "student_homephone", $student_contact->homephone],
                 ["Mobile", "text", "student_mobile", $student_contact->mobile],
@@ -123,9 +128,9 @@ function studentview_ALL(Web $w) {
         ];
     }
     
-
+    
     //check for billing contact and add to array
-    if (!$main_is_billing && !empty($secondary_contact_mapping) && !$secondary_contact_mapping->is_billing_contact) {
+    if (!$main_is_billing && !$Secondary_is_billing) {
         $billing_contact_mapping = $student->getBillingContactMapping();
         if (!empty($billing_contact_mapping)) {
             $billing_contact = $billing_contact_mapping->getContact();
@@ -170,8 +175,9 @@ function studentview_ALL(Web $w) {
                 [
                     ["Actions", "text", "editButton", Html::b('/school-manager/studentcontactedit/' . $student->id . '/' . $contact_mapping->id, 'Edit')]
                 ]
-            ];
+            ];   
         }
+       
     }
 
 
