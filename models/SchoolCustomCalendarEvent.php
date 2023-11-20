@@ -11,4 +11,5 @@ class SchoolCustomCalendarEvent extends DbObject {
     public $repeat_interval; // select box
 
     // ADD TIMEZONE LIKE IN ManagerSettings
+
 }

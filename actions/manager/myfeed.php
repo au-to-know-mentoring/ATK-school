@@ -131,8 +131,8 @@ function myfeed_ALL(Web $w)
 
                 $event = [
                     'title' => $availability->type . ' ' . SchoolService::getInstance($w)->GetTeacherForId($availability->object_id)->getFullName(), // a property!
-                    'start' => $availability->getStartForCurrentWeek($_REQUEST), // a property!
-                    'end' => $availability->getEndForCurrentWeek($_REQUEST),
+                    // 'start' => $availability->getStartForCurrentWeek($_REQUEST), // a property!
+                    // 'end' => $availability->getEndForCurrentWeek($_REQUEST),
                     'url' => '/school-teacher/editavailability/' . "teacher/" . $p['teacher_id'] . '/' .  $availability->id,  ///////////////
                     'className' => $availability->type,
 
@@ -141,9 +141,6 @@ function myfeed_ALL(Web $w)
             }
         }
     }
-
-
-
 
 
 
@@ -184,19 +181,31 @@ function myfeed_ALL(Web $w)
                 // Check if calendar is visible in settings get event
                 if ($is_visible) {
                     // var_dump($_REQUEST); die;
-                    $event_setting = SchoolService::getInstance($w)->getAllCustomCalendarEventsByCalendarIdAndRange($custom_calendar_setting->custom_calendar_id, $_REQUEST);
-                    // var_dump($custom_calendar_setting); die;
-                    var_dump($event_setting); die;
+                    $customCalendarEvents = SchoolService::getInstance($w)->getAllCustomCalendarEventsByCalendarIdAndRange($custom_calendar_setting->custom_calendar_id);
+                    // var_dump($customCalendarEvent); die;
+                    foreach($customCalendarEvents as $customCalendarEvent){
+                    $customEvent = [
+                        'title' => $customCalendarEvent->event_name,
+                        'start' => $customCalendarEvent->getStartForCurrentWeek($_REQUEST),
+                        'end' => $customCalendarEvent->getEndForCurrentWeek($_REQUEST),
+                        'url' => '',
+                        'className' => '',
+    
+                    ];
+                    $calendarEvents[] = $customEvent;
+
+                    // var_dump($customCalendarEvent->dt_start_time); die;
+                }
                 }
             }
         }
-    }
+     } //die;
 
 
 
 
     // build events into array and add to calendar events array
 
-
+    // var_dump($customEvent); die;
     $w->out(json_encode($calendarEvents));
 }

@@ -31,10 +31,17 @@ class SchoolService extends DbService {
         return $this->getObjects('SchoolCustomCalendarEvent', ['is_deleted' =>0]);
     }
 
+
+    /* NOT WORKING
     public function getAllCustomCalendarEventsByCalendarIdAndRange($custom_calendar_id, $dateArray) {
         return $this->getObjects('SchoolCustomCalendarEvent', ['is_deleted'=>0,
          'custom_calendar_id' => $custom_calendar_id,
          'dt_start_time <= ?' => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
+    } */
+
+    public function getAllCustomCalendarEventsByCalendarIdAndRange($custom_calendar_id) {
+        return $this->getObjects('SchoolCustomCalendarEvent', ['is_deleted'=>0,
+         'custom_calendar_id' => $custom_calendar_id]);
     }
 
     public function getUninvoicedClasses() {
