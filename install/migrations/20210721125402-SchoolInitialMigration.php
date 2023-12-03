@@ -22,6 +22,8 @@ class SchoolInitialMigration extends CmfiveMigration
             ->addStringColumn('timezone')
             ->addIdColumn('user_id')
             ->addIntegerColumn('max_students')
+            ->addDateColumn('d_acquired_date')
+            ->addStringColumn('input_certnumber')
             ->addCmfiveParameters() // this function adds some standard columns used in cmfive. dt_created, dt_modified, creator_id, modifier_id, and is_deleted.
             ->create();
         }   

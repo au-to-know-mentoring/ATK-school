@@ -6,7 +6,18 @@ class SchoolTeacher extends DbObject {
     public $max_students;
     public $state;
     public $timezone;
+    public $d_acquired_date; // working with children check
+    public $input_certnumber; // working with children check
+    
 
+
+    public function getDateAcquired() {
+        //return formatDate($this->dt_class_date, 'H:i');
+        if (!empty($this->d_acquired_date)) {
+            return date('d/m/Y', $this->d_acquired_date);
+        }
+        return null;
+    }
     public function getUser() {
         return AuthService::getInstance($this->w)->getUser($this->user_id);
     }

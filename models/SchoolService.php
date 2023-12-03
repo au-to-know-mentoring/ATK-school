@@ -59,7 +59,7 @@ class SchoolService extends DbService {
         return $this->getObjects('SchoolInvoiceLine', ['invoice_id' => $invoice_id, 'is_deleted' => 0]);
     }
 
-    public function getInvoicesForFilter($status = "Paid", $student_id, $date_sent_range_start, $date_sent_range_end) {
+    public function getInvoicesForFilter($date_sent_range_start, $date_sent_range_end, $student_id, $status = "Paid") {
         $where = [
             'is_deleted' => 0,
             'status' => $status,
