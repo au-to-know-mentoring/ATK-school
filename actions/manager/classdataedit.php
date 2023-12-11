@@ -1,10 +1,11 @@
 <?php
 
-function classdataedit_GET(Web $w) {
-    $p = $w->pathMatch('student_id','class_data_id');
+function classdataedit_GET(Web $w)
+{
+    $p = $w->pathMatch('student_id', 'class_data_id');
 
-    
-   
+
+
 
     if (empty($p['student_id'])) {
         $w->error('No Student Id found TEST', '/school-teacher/studentlist');
@@ -24,13 +25,13 @@ function classdataedit_GET(Web $w) {
         $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
     }
 
-    $frequencySelectArray = ['one off', 'weekly','fortnightly','monthly'];
+    $frequencySelectArray = ['one off', 'weekly', 'fortnightly', 'monthly'];
     $statusSelectArray = ['pending', 'active', 'on hold', 'completed'];
 
     $form = [
-        'Class Details'=> [
+        'Class Details' => [
             [
-                
+
                 ['Teacher', 'select', 'teacher_id', $class_data->teacher_id, SchoolService::getInstance($w)->GetAllTeachers()],
                 ['Topic', 'text', 'topic', $class_data->topic]
             ],
@@ -50,7 +51,7 @@ function classdataedit_GET(Web $w) {
             ],
             [
                 //['Is Recurring', 'checkbox', 'is_recurring', $class_data->is_recurring],
-                ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray],
+                ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray], // NEEDS IS REQUIRED WIP
                 (new \Html\Form\InputField\Number())->setLabel("Duration (Hours)")->setName("duration")->setValue($class_data->duration)
             ],
             [
@@ -68,7 +69,7 @@ function classdataedit_GET(Web $w) {
     ];
 
 
-    
+
     if (empty($p['class_data_id'])) {
         $form_url = '/school-manager/classdataedit/' . $student->id;
     } else {
@@ -77,12 +78,12 @@ function classdataedit_GET(Web $w) {
 
 
     $w->out(Html::multiColForm($form, $form_url));
-
 }
 
-function classdataedit_POST(Web $w) {
-    $p = $w->pathMatch('student_id','class_data_id');
-   
+function classdataedit_POST(Web $w)
+{
+    $p = $w->pathMatch('student_id', 'class_data_id');
+
     if (empty($p['student_id'])) {
         $w->error('No Student Id found', '/school-teacher/studentlist');
     }
@@ -99,12 +100,16 @@ function classdataedit_POST(Web $w) {
         $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
     }
 
+    // var_dump($_POST); die;
+    if($_POST['frequency'] != "one off"){
+        $class_data->is_recurring = true;
+    }
     $class_data->fill($_POST);
     $class_data->student_id = $student->id;
 
     //check which timezone the start time value is for
     //$time = new DateTime(NULL, new DateTimeZone($timezone));
-    
+
     try {
         if ($_POST['timezone'] == 'Australia/Sydney') {
             $time_object = new DateTime(str_replace('/', '-', $_POST['start_date']) . ' ' . $_POST['start_time']);
@@ -140,11 +145,10 @@ function classdataedit_POST(Web $w) {
         $end_dt_object->setTimestamp($end_time_object->getTimestamp());
         $class_data->dt_end_date = $end_dt_object->format('Y-m-d H:i:s');
     }
-
+    // var_dump($class_data); die;
     $class_data->insertOrUpdate();
-    
+
     $msg = "class data saved";
 
     $w->msg($msg, '/school-teacher/studentview/' . $student->id);
-
 }

@@ -26,8 +26,7 @@ function myfeed_ALL(Web $w) {
         }
     }
 
-    //var_dump($class_instances);
-    
+    // var_dump($class_instances);
 
     $calendarEvents = [];
 
