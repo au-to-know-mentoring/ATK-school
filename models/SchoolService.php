@@ -2,7 +2,14 @@
 
 class SchoolService extends DbService {
 
-
+    public function showFormatedDate($dt_field) {
+        
+        $dt_object = new DateTime(formatDate($dt_field, "d-m-Y H:i:s"), new DateTimeZone("AEDT"));
+        $dt_object->setTimezone(new DateTimeZone("UTC"));
+        
+        $new_Date = new DateTime($dt_object->format("d-m-Y H:i:s"), new DateTimeZone("AEDT"));
+        return $new_Date;
+    }
     public function getAllInvoices() {
         return $this->GetObjects('SchoolInvoice',['is_deleted'=>0]);
     }

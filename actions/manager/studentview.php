@@ -193,9 +193,21 @@ function studentview_ALL(Web $w) {
     
     if (!empty($classes)) {
         foreach ($classes as $class) {
+
+            var_dump($class->dt_class_date); 
+            var_dump(formatDate($class->dt_class_date, "d-m-Y H:i:s"));
+            
+            $dt_object = new DateTime(formatDate($class->dt_class_date, "d-m-Y H:i:s"), new DateTimeZone("AEDT"));
+            $dt_object->setTimezone(new DateTimeZone("UTC"));
+
+            var_dump($dt_object->format("d-m-Y H:i:s"));
+            $schoolServiceObject = SchoolService::getInstance($w)->showFormatedDate($class->dt_class_date)->format("d-m-Y H:i:s");
+            var_dump($schoolServiceObject);
+
             $row = [];
             $row[] = $class->getTeacher()->getContact()->getFullName();
             $row[] = $class->getNextDate();
+            
             $row[] = date('H:i', $class->dt_class_date);
             if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
                 $row[] = $class->frequency;
