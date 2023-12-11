@@ -21,6 +21,7 @@ function myfeed_ALL(Web $w)
 
     $calendarSettingsByTeacherId = [];
 
+    // Make array with teacher id as key and teacher settings as value
     foreach ($calSettings as $setting) {
         $calendarSettingsByTeacherId[$setting->teacher_id] = $setting;
     }
@@ -29,12 +30,16 @@ function myfeed_ALL(Web $w)
     // var_dump($calendarSettingsByTeacherId); die;
     $teacher_availability = [];
 
+    // Check if viewing specific teacher with Id in path if empty retrieve all class data and teacher availability
     if (empty($p['teacher_id'])) {
         $classes = SchoolService::getInstance($w)->GetAllClassDataForDateRange($_REQUEST);
         $teacher_availability = SchoolService::getInstance($w)->GetAllTeacherAvailability();
         // var_dump($teacher_availability); die;
 
+        // If not viewing single teacher apply settings = true for custom settings for custCal and calSettings
         $applySettings = true;
+
+    // If teacher id in path retrive classes and availability for teacher
     } else {
         $classes = SchoolService::getInstance($w)->GetAllClassDataForTeacherIdAndDateRange($p['teacher_id'], $_REQUEST);
         $teacher_availability = SchoolService::getInstance($w)->GetTeacherAvailabilityForTeacherId($p['teacher_id']);
@@ -45,6 +50,7 @@ function myfeed_ALL(Web $w)
 
     $class_instances = [];
 
+    // Get or make instances for date range
     foreach ($classes as $class) {
         $ci = $class->GetInstanceForRange($_REQUEST);
         if (!empty($ci)) {
@@ -128,11 +134,10 @@ function myfeed_ALL(Web $w)
                 }
             }
             if ($is_visible) {
-
                 $event = [
                     'title' => $availability->type . ' ' . SchoolService::getInstance($w)->GetTeacherForId($availability->object_id)->getFullName(), // a property!
-                    // 'start' => $availability->getStartForCurrentWeek($_REQUEST), // a property!
-                    // 'end' => $availability->getEndForCurrentWeek($_REQUEST),
+                    'start' => $availability->getStartForCurrentWeek($_REQUEST), // a property!
+                    'end' => $availability->getEndForCurrentWeek($_REQUEST),
                     'url' => '/school-teacher/editavailability/' . "teacher/" . $p['teacher_id'] . '/' .  $availability->id,  ///////////////
                     'className' => $availability->type,
 
