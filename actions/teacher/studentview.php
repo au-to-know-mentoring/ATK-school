@@ -4,9 +4,15 @@ function studentview_ALL(Web $w) {
     $p = $w->pathMatch('student_id','class_data_id');
 
     $loggedInUser = AuthService::getInstance($w)->user();
+    
 
     if ($loggedInUser->hasRole('school_manager')) {
         $w->msg("",'/school-manager/studentview/' . $p['student_id']);
+    }
+    
+    $user = null;
+    if ($loggedInUser->hasRole('school_teacher')){
+        $user = SchoolService::getInstance($w)->GetTeacherForUserId($loggedInUser->id);
     }
 
     if (empty($p['student_id'])) {
@@ -28,7 +34,7 @@ function studentview_ALL(Web $w) {
     //smaple time for student
     $time = null;
     if (!empty($student->timezone)) {
-        $time = new DateTime(NULL, new DateTimeZone($student->timezone));
+        $time = new DateTime("now", new DateTimeZone($student->timezone));
     }
     
 
@@ -69,10 +75,15 @@ function studentview_ALL(Web $w) {
     
     if (!empty($classes)) {
         foreach ($classes as $class) {
+            
+
+            $dt_Object = new DateTime(formatDate($class->dt_class_date, "H:i"), new DateTimeZone($class->timezone));
+            $dt_Object->setTimezone(new DateTimeZone($user->timezone));
+
             $row = [];
             $row[] = $class->getTeacher()->getContact()->getFullName();
             $row[] = $class->getNextDate();
-            $row[] = date('H:i', $class->dt_class_date);
+            $row[] = $dt_Object->format("H:i");
             if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
                 $row[] = $class->frequency;
                 $row[] = $class->status;

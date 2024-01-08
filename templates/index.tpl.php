@@ -2,6 +2,7 @@
 <?php
     $user = AuthService::getInstance($w)->user();
     
+
     if ($user->hasRole('school_manager')) {
         echo Html::b("/school-manager/calendar","View Calendar");
         echo "<br><br>";

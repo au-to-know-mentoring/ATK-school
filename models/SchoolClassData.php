@@ -14,6 +14,7 @@ class SchoolClassData extends DbObject {
     public $topic;
     public $notes;
     public $rate;
+    public $timezone; // for TZ testing
     
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');

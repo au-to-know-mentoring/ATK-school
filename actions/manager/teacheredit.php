@@ -157,46 +157,7 @@ function teacheredit_POST(Web $w)
      $email = $contact->firstname . "@email.com"; 
     
     
-    $loggedInUser = AuthService::getInstance($w)->User();
-    if ($loggedInUser ->is_admin == 1 && !empty($_REQUEST['autocheck'])) 
-    {
-        // CONTACT
-        $contact->fill($_POST);
-        // Contact Details
-        $contact->firstname = $firstName;
-        $contact->lastname = $lastName;
-        $contact->homephone = $homePhoneNUM;
-        $contact->mobile = $mobilePhoneNUM;
-        $contact->email = $email;
-        $contact->insertOrUpdate();
-        // USER
-        $hasPass = $user->password;
-            if (empty($_REQUEST['password'])){
-                $user->fill($_POST);
-                $user->password = $hasPass; 
-            }
-        // User Details
-        $user->login = $teacherLogin;
-        $user->contact_id = $contact->id;
-        $user->is_active = true;
-        $user->insertOrUpdate();
-        // TEACHER
-        $user->addRole('school_teacher');
-        $user->addRole('user');
-       
-        $teacher->user_id = $user->id;
-        $teacher->fill($_POST);
-        
-        // Mentor Working Data input fields
-        $teacher->input_certnumber = random_int(1000000,9999999);
-        $teacher->d_acquired_date = date("y:d:m"); 
-        // Mentor Data
-        $teacher->max_students = random_int(1,10);
-        $teacher->state = "NSW";
-        $teacher->timezone = "Australia/Sydney";
-    
-        
-    } else { 
+     
         // CONTACT
         $contact->fill($_POST);
         $contact->insertOrUpdate();
@@ -207,16 +168,19 @@ function teacheredit_POST(Web $w)
             $user->password = $hasPass;// if password field is empty, user will maintain current password
         } else {$user->setPassword($_POST['password']);} 
 
+        
         $user->contact_id = $contact->id;
         $user->is_active = true;
         $user->insertOrUpdate();
+        
 
-        $user->addRole('school_teacher');
         $user->addRole('user');
+        $user->addRole('school_teacher');
+        
         // Teacher
         $teacher->user_id = $user->id;
         $teacher->fill($_POST);
-    } 
+    
            
 
     $teacher->insertOrUpdate();

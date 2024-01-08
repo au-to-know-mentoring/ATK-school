@@ -1,11 +1,12 @@
 <?php
 
 function studentview_ALL(Web $w) {
+
+ 
+
     $p = $w->pathMatch('student_id','class_data_id');
 
     $loggedInUser = AuthService::getInstance($w)->user();
-
-    
 
     if (empty($p['student_id'])) {
         $w->error('No Student Id found', '/school-teacher/studentlist');
@@ -194,21 +195,17 @@ function studentview_ALL(Web $w) {
     if (!empty($classes)) {
         foreach ($classes as $class) {
 
-            var_dump($class->dt_class_date); 
-            var_dump(formatDate($class->dt_class_date, "d-m-Y H:i:s"));
+           
             
-            $dt_object = new DateTime(formatDate($class->dt_class_date, "d-m-Y H:i:s"), new DateTimeZone("AEDT"));
-            $dt_object->setTimezone(new DateTimeZone("UTC"));
+            
+            $dt_Object = new DateTime(formatDate($class->dt_class_date, "H:i"), new DateTimeZone($class->timezone));
+            $dt_Object->setTimezone(new DateTimeZone('Australia/Sydney'));
 
-            var_dump($dt_object->format("d-m-Y H:i:s"));
-            $schoolServiceObject = SchoolService::getInstance($w)->showFormatedDate($class->dt_class_date)->format("d-m-Y H:i:s");
-            var_dump($schoolServiceObject);
 
             $row = [];
             $row[] = $class->getTeacher()->getContact()->getFullName();
             $row[] = $class->getNextDate();
-            
-            $row[] = date('H:i', $class->dt_class_date);
+            $row[] = $dt_Object->format("H:i");
             if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
                 $row[] = $class->frequency;
                 $row[] = $class->status;

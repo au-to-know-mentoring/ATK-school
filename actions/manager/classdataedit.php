@@ -35,7 +35,7 @@ function classdataedit_GET(Web $w) {
                 ['Topic', 'text', 'topic', $class_data->topic]
             ],
             [
-                ['Timezone', 'select', 'timezone', 'Australia/Sydney', SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
+                ['Timezone', 'select', 'timezone', $class_data->timezone, SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
             ],
             [
                 ['Start Date', 'date', 'start_date', $class_data->getStartDate()],
@@ -104,13 +104,12 @@ function classdataedit_POST(Web $w) {
 
     //check which timezone the start time value is for
     //$time = new DateTime(NULL, new DateTimeZone($timezone));
-    
+
+    $redirect = '/school-teacher/studentview/' . $student->id;
     try {
-        if ($_POST['timezone'] == 'Australia/Sydney') {
+        if ($_POST['timezone']) { //if ($_POST['timezone'] == 'Australia/Sydney') {
             $time_object = new DateTime(str_replace('/', '-', $_POST['start_date']) . ' ' . $_POST['start_time']);
-        } else {
-            $time_object = new DateTime(str_replace('/', '-', $_POST['start_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_POST['timezone']));
-        }
+        } 
     } catch (Exception $e) {
         LogService::getInstance($w)->setLogger("SCHOOL")->error($e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
         $w->error('Invalid start date or time', $redirect ?: '/school');
@@ -120,8 +119,10 @@ function classdataedit_POST(Web $w) {
     $dt_object = new DateTime();
     $dt_object->setTimestamp($time_object->getTimestamp());
     $class_data->dt_class_date = $dt_object->format('Y-m-d H:i:s');
+    $class_data->timezone = $_POST['timezone'];
+    
 
-    $redirect = '/school-teacher/studentview/' . $student->id;
+    
     //end date
     if ($_POST['end_date']) {
         try {

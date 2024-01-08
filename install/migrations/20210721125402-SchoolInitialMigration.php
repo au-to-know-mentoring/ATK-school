@@ -66,6 +66,7 @@ class SchoolInitialMigration extends CmfiveMigration
             ->addDateTimeColumn('dt_class_date')
             ->addBooleanColumn('is_recurring')
             ->addStringColumn('frequency')
+            ->addStringColumn('timezone')
             ->addCmfiveParameters() // this function adds some standard columns used in cmfive. dt_created, dt_modified, creator_id, modifier_id, and is_deleted.
             ->create();
         }
