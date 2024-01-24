@@ -77,8 +77,6 @@ class SchoolClassData extends DbObject
         // echo "<br>";
         // echo 
 
-
-        // Filter out if date is out of range of the request date
         if ($this->dt_class_date > strtotime($dateArray['end']) || (!empty($this->dt_end_date) && $this->dt_end_date < strtotime($dateArray['start']))) {
             return null;
         }
@@ -94,91 +92,65 @@ class SchoolClassData extends DbObject
             // echo "</pre><br>next sunday = <br><pre>";
             // var_dump(strtotime('next sunday')); 
 
-            $createInstance = false;
+
 
             //Check if is_recurring is false and frequency is "one off"
             if (!$this->is_recurring && $this->frequency == "one off") {
                 // echo "is one off";
                 // echo "</br>";
-                if ($this->dt_class_date  < strtotime($dateArray['start']) || $this->dt_class_date > strtotime($dateArray['end'])) {
-                } else {
-                    $createInstance = true;
+                if($this->dt_class_date  < strtotime($dateArray['start']) || $this->dt_class_date > strtotime($dateArray['end'])){
+                    
                 }
-            } else if ($this->is_recurring && $this->frequency == "weekly") {  
-                $createInstance = true;
-            }
-
-            else if ($this->is_recurring && $this->frequency == "fortnightly") {  
-
-
-                $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
-                $startRangeOffset = date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date);
-                $possibleClassDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifferenceForWeekStart . " days"));  // set new class date
-
-                $possibleClassDate = new DateTime($possibleClassDate);
-
-                $initalClassDate = date('Y-m-d', $this->dt_class_date);
-                $initalClassDate = new DateTime($initalClassDate);
-                // var_dump(date_diff($initalClassDate, $possibleClassDate)->days % 14); die;
-
-                if(date_diff($initalClassDate, $possibleClassDate)->days % 14 == 0) {
-                    $createInstance = true;
+                else{
+                    $instance = new SchoolClassInstance($this->w);
+                    $instance->class_data_id = $this->id;
+                    $weekdayName = date('l Y/m/d', $this->dt_class_date);
+                    $weekdayNumber = date('w', $this->dt_class_date);
+                    $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start']));
+                    $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
+                    $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
+    
+                    $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
+                    $instance->status = 'Scheduled';
+                    $instance->insertOrUpdate();
+                    $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
                 }
-               
                 
+            } else if ($this->is_recurring && $this->frequency == "weekly") {
+                // echo "is weekly";
+                // echo "</br>";
+
+                $instance = new SchoolClassInstance($this->w);
+                $instance->class_data_id = $this->id;
+                $weekdayName = date('l Y/m/d', $this->dt_class_date);
+                $weekdayNumber = date('w', $this->dt_class_date);
+                $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start']));
+                $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
+                $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
+
                 
+
+                $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
+                $instance->status = 'Scheduled';
+                $instance->insertOrUpdate();
+                $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
             }
-
-            // Is monthly first weekday of month ie 30/31days or 4 weekly
-            else if ($this->is_recurring && $this->frequency == "monthly") {  
-
-
-                $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
-                $startRangeOffset = date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date);
-                $possibleClassDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifferenceForWeekStart . " days"));  // set new class date
-
-                $possibleClassDate = new DateTime($possibleClassDate);
-
-                $initalClassDate = date('Y-m-d', $this->dt_class_date);
-                $initalClassDate = new DateTime($initalClassDate);
-                // var_dump(date_diff($initalClassDate, $possibleClassDate)->days % 28); die;
-
-                if(date_diff($initalClassDate, $possibleClassDate)->days % 28 == 0) {
-                    $createInstance = true;
-                }
-               
-                
-                
-            }
-
-
-
-
-            if($createInstance == true){
-            $instance = new SchoolClassInstance($this->w);
-            $instance->class_data_id = $this->id;
-            $weekdayName = date('l Y/m/d', $this->dt_class_date);  // get class data weekday name
-            $weekdayNumber = date('w', $this->dt_class_date); // get class data weekdayNumber
-            $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week
-            $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
-            $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
-
-            $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
-            $instance->status = 'Scheduled';
-            $instance->insertOrUpdate();
-            $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
-            }
-
-
 
             // echo "<pre>";
             // var_dump($weekdayName);  //Name classData Weekday
             // var_dump($weekdayNumber); //Number of weekday IE friday = 5
-            // var_dump(date('l Y/m/d H:i', strtotime($dateArray['start'])));  //start day of request period
+            // var_dump(date('l Y/m/d H:i',strtotime($dateArray['start'])));  //start day of request period
             // var_dump(date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
             // var_dump($daysDifference); //days difference from request start day
             // var_dump($classDate);
             // die;
+
+
+            // $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
+            // //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));
+            // $instance->status = 'Scheduled';
+            // $instance->insertOrUpdate();
+            // $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
         } else {
             if (count($instances) == 1) {
                 //var_dump($instances);
