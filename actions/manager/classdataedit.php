@@ -25,7 +25,7 @@ function classdataedit_GET(Web $w)
         $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
     }
 
-    $frequencySelectArray = ['one off', 'weekly', 'fortnightly', 'monthly'];
+    $frequencySelectArray = ['one off', 'weekly', 'fortnightly', 'monthly (four weekly)'];
     $statusSelectArray = ['pending', 'active', 'on hold', 'completed'];
 
     $form = [

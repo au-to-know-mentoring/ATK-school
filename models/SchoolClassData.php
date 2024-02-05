@@ -76,6 +76,7 @@ class SchoolClassData extends DbObject
         // var_dump($dateArray);
         // echo "<br>";
         // echo 
+        // var_dump($this->dt_class_date); die;
 
 
         // Filter out if date is out of range of the request date
@@ -114,12 +115,24 @@ class SchoolClassData extends DbObject
                 $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
                 $startRangeOffset = date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date);
                 $possibleClassDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifferenceForWeekStart . " days"));  // set new class date
-
+                // var_dump($possibleClassDate); die;
                 $possibleClassDate = new DateTime($possibleClassDate);
 
                 $initalClassDate = date('Y-m-d', $this->dt_class_date);
                 $initalClassDate = new DateTime($initalClassDate);
+
+
+                // other method
+                // var_dump( strtotime($possibleClassDate) . " - " . $this->dt_class_date); die;
+
+
+                // $classDate = date('H:i:s', $this->dt_class_date);
+                // $seconds = strtotime($possibleClassDate) - $classDate;  // date is off by amount of hours
+                // var_dump(strtotime($classDate)); die;
+
+
                 // var_dump(date_diff($initalClassDate, $possibleClassDate)->days % 14); die;
+
 
                 if(date_diff($initalClassDate, $possibleClassDate)->days % 14 == 0) {
                     $createInstance = true;
@@ -130,7 +143,7 @@ class SchoolClassData extends DbObject
             }
 
             // Is monthly first weekday of month ie 30/31days or 4 weekly
-            else if ($this->is_recurring && $this->frequency == "monthly") {  
+            else if ($this->is_recurring && $this->frequency == "monthly (four weekly)") {  
 
 
                 $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
