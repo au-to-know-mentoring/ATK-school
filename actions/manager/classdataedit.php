@@ -25,7 +25,7 @@ function classdataedit_GET(Web $w)
         $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
     }
 
-    $frequencySelectArray = ['one off', 'weekly', 'fortnightly', 'monthly (four weekly)'];
+    $frequencySelectArray = ['one off', 'weekly', 'fortnightly', 'four weekly'];
     $statusSelectArray = ['pending', 'active', 'on hold', 'completed'];
 
     $form = [
@@ -51,7 +51,7 @@ function classdataedit_GET(Web $w)
             ],
             [
                 //['Is Recurring', 'checkbox', 'is_recurring', $class_data->is_recurring],
-                ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray], // NEEDS IS REQUIRED WIP
+                ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray, "null"], // NEEDS IS REQUIRED WIP
                 (new \Html\Form\InputField\Number())->setLabel("Duration (Hours)")->setName("duration")->setValue($class_data->duration)
             ],
             [

@@ -143,7 +143,7 @@ class SchoolClassData extends DbObject
             }
 
             // Is monthly first weekday of month ie 30/31days or 4 weekly
-            else if ($this->is_recurring && $this->frequency == "monthly (four weekly)") {  
+            else if ($this->is_recurring && $this->frequency == "four weekly") {  
 
 
                 $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
