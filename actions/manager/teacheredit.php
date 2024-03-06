@@ -9,22 +9,26 @@ function teacheredit_GET(Web $w)
         $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['id']);
         $user = $teacher->getUser();
         $contact = $user->getContact();
-        $w->ctx("title","Edit Teacher");
+        $w->ctx("title","Edit Mentor");
     } else {
         $teacher = new SchoolTeacher($w);
         $user = new User($w);
         $contact = new Contact($w);
-        $w->ctx("title","Add Teacher");
+        $w->ctx("title","Add Mentor");
     }
+    
+
+   
 
     $form = [
         "User Details" => [
             [
-                ["Login", "text", "login", $user->login],
-            ],[
+                
+                ["Login", empty($p['id']) ? "text" : "static", "login", $user->login],
+            ], empty($p['id']) ? [
                 ["Password", "password", "password"],
                 ["Repeat Password", "password", "password2"]
-            ]
+            ] : ""
         ],
         "Contact Details" => [
             [
@@ -37,7 +41,7 @@ function teacheredit_GET(Web $w)
                 ["Email", "text", "email", $contact->email]
             ]
         ], 
-        "Teacher Data" => [
+        "Mentor Data" => [
             [
                 (new \Html\Form\InputField\Number())->setLabel("Max Student Capacity")->setName("max_students")->setValue($teacher->max_students)
                 
@@ -71,10 +75,14 @@ function teacheredit_POST(Web $w)
         $user = new User($w);
         $contact = new Contact($w);
     }
-
-    if ($_REQUEST['password2'] != $_REQUEST['password']) {
-        $errors[] = "Passwords don't match";
+    $errors = [];
+    if (empty($p['id'])) {
+        if ($_REQUEST['password2'] != $_REQUEST['password']) {
+            $errors[] = "Passwords don't match";
+        }
     }
+    
+
      if (sizeof($errors) != 0) {
          $w->error(implode("<br/>\n", $errors), "/school-manager/teacherlist");
      }
@@ -82,10 +90,15 @@ function teacheredit_POST(Web $w)
     $contact->fill($_POST);
 
     $contact->insertOrUpdate();
-
+    
     $user->fill($_POST);
+    
+   
     $user->contact_id = $contact->id;
-    $user->setPassword($_POST['password'], false);
+    if (empty(['id'])){
+        $user->setPassword($_POST['password'], false);
+    }
+    
     $user->is_active = true;
     $user->insertOrUpdate();
     // need to add roles for teacher

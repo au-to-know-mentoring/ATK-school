@@ -59,7 +59,7 @@ class SchoolService extends DbService {
         return $this->getObjects('SchoolInvoiceLine', ['invoice_id' => $invoice_id, 'is_deleted' => 0]);
     }
 
-    public function getInvoicesForFilter($status = "Paid", $student_id, $date_sent_range_start, $date_sent_range_end) {
+    public function getInvoicesForFilter($student_id, $date_sent_range_start, $date_sent_range_end, $status = "Paid") {
         $where = [
             'is_deleted' => 0,
             'status' => $status,
@@ -343,7 +343,7 @@ class SchoolService extends DbService {
                 $w->menuLink("/school-manager/studentedit", "New Participant", $nav);
                 $w->menuLink("/school-manager/teacherlist", "View Mentors", $nav);
                 //$w->menuLink("/school-manager/classdataedit", "Add New Class", $nav);
-                $w->menuLink("/school-manager/studentlist", "View Participants", $nav);
+                $w->menuLink("/school-teacher/studentlist", "View Participants", $nav);
                 $w->menuLink("/school-manager/settings", "Change Settings", $nav);
                 $w->menuLink("/school-manager/invoices", "Invoices", $nav);
             } elseif ($user->hasRole('school_teacher')) {

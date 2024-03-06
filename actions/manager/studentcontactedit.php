@@ -106,7 +106,7 @@ function studentcontactedit_POST(Web $w) {
     $student_contact_mapping->notes = $_POST['notes'];
 
     //check if ok to set or need to remove previous main and billing contact
-    if ($_POST['is_main_contact'] && $_POST['is_billing_contact'] && !empty($main_contact) && !empty($billing_contact) && $main_contact->id == $billing_contact->id) {
+    if (!empty($_POST['is_main_contact']) && !empty($_POST['is_billing_contact']) && !empty($main_contact) && !empty($billing_contact) && $main_contact->id == $billing_contact->id) { // change made at the styart of the if statement adding in the !empty()
        
         $old_main_contact_mapping = $student->getMainContactMapping();
         $old_main_contact_mapping->is_main_contact = false;
@@ -117,7 +117,8 @@ function studentcontactedit_POST(Web $w) {
         $student_contact_mapping->is_billing_contact = $_POST['is_billing_contact'] ? true : false;
 
     } else {
-        if ($_POST['is_main_contact']) {
+    
+        if (!empty($_POST['is_main_contact'])) {// !empty change ad
             // check and remove old main contact
             if (!empty($main_contact) && $main_contact->id != $contact->id) {
                 $old_main_contact_mapping = $student->getMainContactMapping();
@@ -126,9 +127,9 @@ function studentcontactedit_POST(Web $w) {
             }
             
         }
-        $student_contact_mapping->is_main_contact = $_POST['is_main_contact'] ? true : false;
+        $student_contact_mapping->is_main_contact = !empty($_POST['is_main_contact']) ? true : false;
         
-        if ($_POST['is_billing_contact']) {
+        if (!empty($_POST['is_billing_contact'])) {
             // check and remove old billing contact
             if (!empty($billing_contact) && $billing_contact->id != $contact->id) {
                 $old_billing_contact_mapping = $student->getBillingContactMapping();
@@ -137,10 +138,10 @@ function studentcontactedit_POST(Web $w) {
             }
             
         }
-        $student_contact_mapping->is_billing_contact = $_POST['is_billing_contact'] ? true : false;
+        $student_contact_mapping->is_billing_contact = !empty($_POST['is_billing_contact']) ? true : false;
     }
-    if ($_POST['is_secondary_contact']) {
-        if (!$_POST['is_main_contact']) {
+     if (!empty($_POST['is_secondary_contact'])) {
+        if (empty($_POST['is_main_contact'])) {
             // check for existing secondary cointact
             $old_secondary_contact = $student->getSecondaryContactMapping();
             if (!empty($old_secondary_contact)) {
@@ -152,7 +153,12 @@ function studentcontactedit_POST(Web $w) {
             $student_contact_mapping->is_secondary_contact = false;
         }
 
-    }
+    }else {$student_contact_mapping->is_secondary_contact = false;}
+
+   
+    
+   
+    
     
 
 
