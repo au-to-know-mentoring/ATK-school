@@ -51,7 +51,7 @@ function classdataedit_GET(Web $w)
             ],
             [
                 //['Is Recurring', 'checkbox', 'is_recurring', $class_data->is_recurring],
-                ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray, "null"], // NEEDS IS REQUIRED WIP
+                ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray, "null"],
                 (new \Html\Form\InputField\Number())->setLabel("Duration (Hours)")->setName("duration")->setValue($class_data->duration)
             ],
             [
