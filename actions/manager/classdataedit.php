@@ -1,7 +1,6 @@
 <?php
 
-function classdataedit_GET(Web $w)
-{
+function classdataedit_GET(Web $w) {
     $p = $w->pathMatch('student_id', 'class_data_id');
 
 
@@ -80,8 +79,7 @@ function classdataedit_GET(Web $w)
     $w->out(Html::multiColForm($form, $form_url));
 }
 
-function classdataedit_POST(Web $w)
-{
+function classdataedit_POST(Web $w) {
     $p = $w->pathMatch('student_id', 'class_data_id');
 
     if (empty($p['student_id'])) {
@@ -101,7 +99,7 @@ function classdataedit_POST(Web $w)
     }
 
     // var_dump($_POST); die;
-    if($_POST['frequency'] != "one off"){
+    if ($_POST['frequency'] != "one off") {
         $class_data->is_recurring = true;
     }
     $class_data->fill($_POST);
