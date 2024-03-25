@@ -71,14 +71,15 @@ class SchoolClassData extends DbObject {
             return null;
         }
 
-        // retrieve instances from request date range
+        // retrieve instances from request date range       
         $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['start'])), "dt_class_date <= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
+
+
 
         $instance = '';
         if (empty($instances)) {
-
+            
             $createInstance = false;
-
             //Check if is_recurring is false and frequency is "one off"
             if (!$this->is_recurring && $this->frequency == "one off") {
 
@@ -120,8 +121,8 @@ class SchoolClassData extends DbObject {
             if ($createInstance == true) {
                 $instance = new SchoolClassInstance($this->w);
                 $instance->class_data_id = $this->id;
-                $weekdayName = date('l Y/m/d', $this->dt_class_date);  // get class data weekday name
-                $weekdayNumber = date('w', $this->dt_class_date); // get class data weekdayNumber
+                // $weekdayName = date('l Y/m/d', $this->dt_class_date);  // get class data weekday name
+                // $weekdayNumber = date('w', $this->dt_class_date); // get class data weekdayNumber
                 $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week
                 $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
                 $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
@@ -134,6 +135,25 @@ class SchoolClassData extends DbObject {
         } else {
             if (count($instances) == 1) {
                 $instance = $instances[0];
+
+                $changeInstance = null;
+                if($instance->is_edited){ 
+                    $changeInstance = false;
+                }
+                if(date('H:i:s', $instance->dt_class_date) != date('H:i:s', $this->dt_class_date || date('l', $instance->dt_class_date) != date('l', $this->dt_class_date))){
+                    $changeInstance = true;
+                }
+                if ($changeInstance === true){
+                
+                $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start']));// get days difference from start of week
+                $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
+                $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
+                $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
+                $instance->insertOrUpdate();
+
+                }
+
+
             } else {
                 var_dump($instances);
             }

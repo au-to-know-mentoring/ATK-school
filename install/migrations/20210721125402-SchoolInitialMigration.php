@@ -74,6 +74,7 @@ class SchoolInitialMigration extends CmfiveMigration
                 "primary_key" => "id"
             ])->addColumn($column) // add the id column
             ->addIdColumn('class_data_id')
+            ->addBooleanColumn('is_edited')
             ->addIdColumn('substitute_teacher_id')
             ->addDateTimeColumn('dt_class_date')
             ->addStringColumn('status')

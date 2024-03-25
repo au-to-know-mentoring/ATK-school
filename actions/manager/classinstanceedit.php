@@ -143,6 +143,7 @@ function classinstanceedit_POST(Web $w) {
     if ($class_instance->substitute_teacher_id == '') {
         $class_instance->substitute_teacher_id = null;
     }
+    $class_instance->is_edited = true;
     $class_instance->insertOrUpdate();
 
     $w->msg('Session updated', '/school-manager/viewclassinstance/' . $class_instance->id);
