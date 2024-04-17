@@ -7,6 +7,7 @@ class SchoolClassInstance extends DbObject {
     public $dt_class_date;
     public $status; // 'Scheduled', 'Late Cancel', 'Canceled', 'Completed'
     public $teachers_notes;
+    public $is_edited;
 
     public function GetFormattedDate() {
         return date('d/m/Y', $this->dt_class_date);

@@ -146,6 +146,85 @@ function classdataedit_POST(Web $w) {
     // var_dump($class_data); die;
     $class_data->insertOrUpdate();
 
+    // Get instances of this class data IF it is unedited / scheduled
+    $instances = SchoolService::getInstance($w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $p['class_data_id'], 'is_edited' => 0]); // get only future dates
+
+    // Get each instance that needs editing
+    foreach($instances as $instance){
+        // Get ClassData for instances
+
+        //Change time from instance old to new class time.
+
+        // var_dump($class_data->dt_class_date);
+
+        // echo "<br>";
+
+        // var_dump($instance->dt_class_date);
+
+        $instance_date = new DateTime(date('Y-m-d', $instance->dt_class_date));
+        $class_date = new DateTime($class_data->dt_class_date);
+
+       
+
+        //There is no feed/$_REQUEST to generate week start time
+        // Iterate over each week even if edited but dont change the ones that are edited
+        // issue of deleting instances and them reappearing from feed when scrolling weeks
+       
+
+
+      
+        $class_date = date_create($class_date->format('Y-m-d'));
+        $instance_date = date_create($instance_date->format('Y-m-d'));
+
+        // echo "<br> Class Date <br>";
+        // var_dump($class_date->format('Y-m-d H:i:s'));
+
+       
+        // echo "<br> Instance Date <br>";
+        // var_dump($instance_date->format('Y-m-d H:i:s'));
+ 
+        
+   
+        // $instanceNoWeeks = $instance_date->format('W'); 
+        // $classNoWeeks = $instance_date->format('W');
+
+        // var_dump($instanceNoWeeks . " " . $classNoWeeks);        
+
+
+    
+        // Gets days difference
+        $difference = $class_date->diff($instance_date);
+        // var_dump($difference->format("%r%a"));  //Returns positive or negative value
+
+    
+        // var_dump($difference->format("%r%a") % 7); die;
+        $days_difference = ($difference->format("%r%a"));
+
+        // var_dump($days_difference); 
+
+
+        // FOR GOING BACKWARDS HOW DO I GO FORWARDS
+        $days_difference = $days_difference - ($days_difference % 7);  // days different from Class Date!!!!! 
+
+
+        var_dump($days_difference); 
+
+            
+        $newDate = $class_date->modify($days_difference . " days");
+
+
+
+
+        $instanceNewDate = new DateTime($newDate->format('Y-m-d') . $class_date->format('H:i:s'));
+
+        
+        var_dump($instanceNewDate->format('Y-m-d')); 
+
+    
+    } 
+    die;
+
+
     $msg = "class data saved";
 
     $w->msg($msg, '/school-teacher/studentview/' . $student->id);

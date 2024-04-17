@@ -136,23 +136,7 @@ class SchoolClassData extends DbObject {
             if (count($instances) == 1) {
                 $instance = $instances[0];
 
-                $changeInstance = null;
-                if($instance->is_edited){ 
-                    $changeInstance = false;
-                }
-                if(date('H:i:s', $instance->dt_class_date) != date('H:i:s', $this->dt_class_date || date('l', $instance->dt_class_date) != date('l', $this->dt_class_date))){
-                    $changeInstance = true;
-                }
-                if ($changeInstance === true){
-                
-                $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start']));// get days difference from start of week
-                $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
-                $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
-                $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
-                $instance->insertOrUpdate();
-
-                }
-
+              
 
             } else {
                 var_dump($instances);
@@ -160,6 +144,7 @@ class SchoolClassData extends DbObject {
         }
         return $instance;
     }
+
 
     public function GetInstanceForCurrentWeek() {
         $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime('last sunday')), "dt_class_date <= ? " => date('Y-m-d 23:59:59', strtotime('next sunday'))]);

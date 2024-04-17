@@ -34,19 +34,16 @@ function myfeed_ALL(Web $w) {
         foreach ($class_instances as $class_instance) {
             // echo "<pre>";
             // var_dump($class_instance);
-            // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
+            // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date)));
             $class_data = $class_instance->getClassData();
             //$startDate = 
             if (empty($p['teacher_id'])) {
-                $start = date('Y-m-d H:i', $class_instance->dt_class_date);
-                $end = date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60));
-
-
-                // $start = new DateTime($class_instance->dt_class_date);
-                // $start->format('Y-m-d H:i');
-                // $end = new DateTime($class_instance->dt_class_date);
-                // $end->add(DateInterval::createFromDateString($class_data->duration . "hour"));
-                // $end->format('Y-m-d H:i');
+                $time = new DateTime();
+                //var_dump($time);
+                $time->setTimestamp($class_instance->dt_class_date);
+                $start = $time->format('Y-m-d H:i');
+                $time->setTimestamp($class_instance->dt_class_date + ($class_data->duration * 60 * 60));
+                $end = $time->format('Y-m-d H:i');
             } else {
                 $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['teacher_id']);
                 $dtz = new DateTimeZone($teacher->timezone);

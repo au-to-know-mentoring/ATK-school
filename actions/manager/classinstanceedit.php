@@ -139,11 +139,12 @@ function classinstanceedit_POST(Web $w) {
     //var_dump(new DateTime($time_object->getTimestamp())->format('Y-m-d H:i:s')); die;
     $dt_object = new DateTime();
     $dt_object->setTimestamp($time_object->getTimestamp());
-    $class_instance->dt_class_date = $dt_object->format('Y-m-d H:i:s');
+    $class_instance->dt_class_date = $dt_object->format('Y-m-d H:i');
     if ($class_instance->substitute_teacher_id == '') {
         $class_instance->substitute_teacher_id = null;
     }
     $class_instance->is_edited = true;
+    // var_dump($class_instance); die;
     $class_instance->insertOrUpdate();
 
     $w->msg('Session updated', '/school-manager/viewclassinstance/' . $class_instance->id);
