@@ -76,11 +76,11 @@ function classinstanceedit_GET(Web $w) {
                 ['Timezone', 'select', 'timezone', 'Australia/Sydney', SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
             ],
             [
-                ['Session Date', 'date', 'start_date', date('d/m/Y', $class_instance->dt_class_date)], 
+                ['Session Date', 'date', 'start_date', $class_instance->dt_class_date->format('d/m/Y')], 
                 //['Class Start Time', 'text', 'start_time', $class_data->getStartTime()],
                 (new \Html\Form\InputField([
                     "id|name"        => "start_time",
-                    "value"            => date('H:i', $class_instance->dt_class_date), //change this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    "value"            =>  formatDate($class_instance->dt_class_date,'H:i', $_SESSION['usertimezone']), //change this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     "pattern"        => "^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\s+)?(AM|PM|am|pm)?$",
                     "placeholder"    => "12hr format: 11:30pm or 24hr format: 23:30",
                     "required"        => "true"
@@ -137,9 +137,9 @@ function classinstanceedit_POST(Web $w) {
     }
     //echo "<pre>";
     //var_dump(new DateTime($time_object->getTimestamp())->format('Y-m-d H:i:s')); die;
-    $dt_object = new DateTime();
-    $dt_object->setTimestamp($time_object->getTimestamp());
-    $class_instance->dt_class_date = $dt_object->format('Y-m-d H:i:s');
+    // $dt_object = new DateTime();
+    // $dt_object->setTimestamp($time_object->getTimestamp());
+    $class_instance->dt_class_date = $time_object;
     if ($class_instance->substitute_teacher_id == '') {
         $class_instance->substitute_teacher_id = null;
     }

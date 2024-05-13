@@ -196,7 +196,7 @@ function studentview_ALL(Web $w) {
             $row = [];
             $row[] = $class->getTeacher()->getContact()->getFullName();
             $row[] = $class->getNextDate();
-            $row[] = date('H:i', $class->dt_class_date);
+            $row[] = $class->getStartTime();
             if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
                 $row[] = $class->frequency;
                 $row[] = $class->status;
