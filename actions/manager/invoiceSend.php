@@ -27,12 +27,14 @@ function invoiceSend_ALL(Web $w) {
         $w->error("Please generate and check invoice PDF", "school-manager/viewInvoice/" . $invoice->id);
     }
 
+    $templateInvoiceNumber = '';
+
     if (Count($attachments) > 1) {
         $invoice_pdf_count = 0;
         $invoice_filename = "Invoice_";
         //$invoice->invoice_number     00000     00001   00100
         $formattedInvoiceNumber = (string) $invoice->id;
-        $templateInvoiceNumber = '';
+        
         for ($i = 0; $i < 5 - strlen($formattedInvoiceNumber); $i++) {
             $invoice_filename .= "0";
             $templateInvoiceNumber .= '0';
@@ -74,7 +76,7 @@ function invoiceSend_ALL(Web $w) {
 
     $subject = $email_template->renderTitle(["invoice_number"=>$templateInvoiceNumber, "participant_full_name"=>$invoice_student->getFullName()]); //add data
     //"test subject: invoice " . $invoice->id;
-    $output = $email_template->renderBody();
+    $output = $email_template->renderBody([]);
 
     // var_dump($billingContactMapping->getContact()->email);
     // die;

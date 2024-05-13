@@ -49,7 +49,7 @@ function generateInvoicePDF_ALL(Web $w) {
         $class_instance = $lineItem->GetClassInstance();
         $class_data = $class_instance->getClassData();
         $line = [];
-        $line['teacher_name'] = $class_instance->getTeacher()->getFullName();
+        $line['line_item'] = $class_data->invoice_line_item;
         $line['session_date'] = $class_instance->GetFormattedDate();
         $line['duration'] = $class_data->duration;
         $line['rate'] = $class_data->rate;
@@ -82,6 +82,7 @@ function generateInvoicePDF_ALL(Web $w) {
             $this->Cell(0, 10, 'Page ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         }
     }
+    //var_dump($template); die;
 
     $pdf = new MYPDF();
     $pdf->AddPage();

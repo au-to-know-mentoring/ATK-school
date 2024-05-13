@@ -87,6 +87,10 @@ function classinstanceedit_GET(Web $w) {
                 ]))->setLabel('Session Start Time')
             ],
             [
+                ["Duration (Hours)", 'text', 'duration', !empty($class_instance->duration) ? $class_instance->duration : $class_data->duration],
+                []
+            ],
+            [
                 ['Status', 'select', 'status', $class_instance->status, $statusSelectArray],
                 ['Substitute Teacher', 'select', 'substitute_teacher_id', $class_instance->substitute_teacher_id ? $class_instance->substitute_teacher_id : null, SchoolService::getInstance($w)->GetAllTeachers()]
             ],

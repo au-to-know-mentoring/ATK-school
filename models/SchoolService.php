@@ -237,6 +237,14 @@ class SchoolService extends DbService {
         return $this->GetObject('SchoolManagerSettings', ['is_deleted' => 0, 'user_id'=> $user_id]);
     }
 
+    public function GetZoomAccounts() {
+        return $this->GetObjects('SchoolZoomAccount',['is_deleted'=>0]);
+    }
+
+    public function GetZoomAccountForId($id) {
+        return $this->GetObject("SchoolZoomAccount", $id);
+    }
+
     public function GetStateSelectOptions() {
         $states = ['NSW','ACT','QLD', 'VIC', 'TAS','SA','NT','WA'];
         return $states;
@@ -346,6 +354,7 @@ class SchoolService extends DbService {
                 $w->menuLink("/school-teacher/studentlist", "View Participants", $nav);
                 $w->menuLink("/school-manager/settings", "Change Settings", $nav);
                 $w->menuLink("/school-manager/invoices", "Invoices", $nav);
+                $w->menuLink("/school-manager/viewzoomaccounts", "Zoom Accounts", $nav);
             } elseif ($user->hasRole('school_teacher')) {
                 $w->menuLink("/school-teacher/teachercalendar", "Calendar", $nav);
                 $w->menuLink("/school-teacher/studentlist", "My Participants", $nav);

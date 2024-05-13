@@ -14,6 +14,7 @@ class SchoolClassData extends DbObject {
     public $topic;
     public $notes;
     public $rate;
+    public $invoice_line_item;
     
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');
@@ -104,6 +105,7 @@ class SchoolClassData extends DbObject {
             $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
             //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));
             $instance->status = 'Scheduled';
+            $instance->duration = $this->duration;
             $instance->insertOrUpdate();
             $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
             

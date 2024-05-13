@@ -77,13 +77,18 @@ function invoices_ALL(Web $w) {
     //paid invoices
 
     // Look for reset
-    $reset = $w->sessionOrRequest("reset");
+    $reset = isset( $_REQUEST["reset"]);
+    //var_dump($reset);
     if (empty($reset)) {
         // Get filter values
         $student_id = $w->sessionOrRequest("school__student-id", null);
         $date_sent_range_start = $w->sessionOrRequest("school__date-range-start");
         $date_sent_range_end = $w->sessionOrRequest("school__date-range-end");
 
+    } else{ 
+        $student_id = "all";
+        $date_sent_range_start = null;
+        $date_sent_range_end = null;
     }
 
     
@@ -101,10 +106,11 @@ function invoices_ALL(Web $w) {
 
     //get invoices for filter
     if (empty($reset)) {
-        $filtered_paid_invoices = SchoolService::getInstance($w)->getInvoicesForFilter("Paid", $student_id, $date_sent_range_start, $date_sent_range_end);
+        $filtered_paid_invoices = SchoolService::getInstance($w)->getInvoicesForFilter($student_id, $date_sent_range_start, $date_sent_range_end);
     }
+    // var_dump($filtered_paid_invoices); die;
 
-    if (!empty($filtered_paid_invoices) && empty($reset)) {
+    if (!empty($filtered_paid_invoices)) {
         $paidtable = [];
         $paidheaders = ['Invoice Number', 'Date Paid', 'Participant', 'Amount', 'Actions'];
         foreach($filtered_paid_invoices as $invoice) {

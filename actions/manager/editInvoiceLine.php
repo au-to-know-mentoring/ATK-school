@@ -20,7 +20,7 @@ function editInvoiceLine_GET(Web $w) {
     $student = $invoice->getStudent();
     $session = SchoolService::getInstance($w)->GetClassInstancesForId($invoice_line->class_instance_id);
     $class_data = $session->getClassData();
-
+//    var_dump($session); die;
     $form = [
         'Invoice Details' => [
             [
@@ -28,25 +28,29 @@ function editInvoiceLine_GET(Web $w) {
                 (new \Html\Form\InputField\Text())->setLabel('Participant')->setValue($student->getContact()->getFullName())->setDisabled(true),
                 (new \Html\Form\InputField\Text())->setLabel('Date Created')->setValue(date('d/m/Y', $invoice->dt_created))->setDisabled(true)
             ]
-            ],
+        ],
         'Line Item Details' => [
             [
-                (new \Html\Form\InputField\Text())->setLabel('Mentor')->setValue($session->getTeacher()->getContact()->getFullName())->setDisabled(true),
-                (new \Html\Form\InputField\Text())->setLabel('Session Date')->setValue(date('d/m/Y',$session->dt_class_date))->setDisabled(true)
+                ['Line Item', 'text', 'invoice_line_item', $invoice_line->invoice_line_item],
+                (new \Html\Form\InputField\Text(['value'=>$invoice_line->invoice_line_item]))->setLabel('Line Item')->setName('invoice_line_item'),
+                ['Session Date', 'date', 'dt_class_date', date('d/m/Y',$invoice_line->dt_class_date)]
+                //(new \Html\Form\InputField\Text())->setLabel('Session Date')->setValue(date('d/m/Y',$session->dt_class_date))
             ],
             [
-                (new \Html\Form\InputField\Text())->setLabel('Duration')->setValue($class_data->duration)->setDisabled(true),
-                (new \Html\Form\InputField\Text())->setLabel('Rate')->setValue($class_data->rate)->setDisabled(true)
+                (new \Html\Form\InputField\Text())->setLabel('Duration')->setName('duration')->setValue($invoice_line->duration),
+                (new \Html\Form\InputField\Text())->setLabel('Rate')->setName('rate')->setValue($invoice_line->rate)
                 
             ]
         ],
         'Amount' => [
             [
-                (new \Html\Form\InputField())->setType('decimal')->setLabel('Amount')->setName('amount')->setValue($invoice_line->amount)
+                (new \Html\Form\InputField())->setType('decimal')->setLabel('Amount')->setName('amount')->setValue($invoice_line->amount)->setDisabled(true)
             ]
         ]
     ];
     
+ 
+
     $w->ctx('lineitemform', Html::multiColForm($form, '/school-manager/editInvoiceLine/' . $invoice_line->id));
 
 }
@@ -58,8 +62,12 @@ function editInvoiceLine_POST(Web $w) {
     if (empty($invoice_line)) {
         $w->error('No invoice line item found for id', '/school-manager/invoices');
     }
-
-    $invoice_line->amount = $_POST['amount'];
+    
+    $invoice_line->amount = $_POST['rate'] * $_POST['duration'];
+    $invoice_line->invoice_line_item = $_POST['invoice_line_item'];
+    $invoice_line->dt_class_date = $_POST['dt_class_date'];
+    $invoice_line->rate = $_POST['rate'];
+    $invoice_line->duration = $_POST['duration'];
     $invoice_line->Update();
     //update invoice total
     $invoice = SchoolService::getInstance($w)->getInvoiceForId($invoice_line->invoice_id);

@@ -130,6 +130,7 @@ function studentview_ALL(Web $w) {
     
     
     //check for billing contact and add to array
+    $has_billing_contact = true; // assume true
     if (!$main_is_billing && !$Secondary_is_billing) {
         $billing_contact_mapping = $student->getBillingContactMapping();
         if (!empty($billing_contact_mapping)) {
@@ -150,9 +151,14 @@ function studentview_ALL(Web $w) {
                     ["Actions", "text", "editButton", Html::b('/school-manager/studentcontactedit/' . $student->id . '/' . $billing_contact_mapping->id, 'Edit')]
                 ]
             ];
+        } else {
+            //no billing contact found
+            $has_billing_contact = false;
         }
     }
 
+    
+    $w->ctx('has_billing_contact', $has_billing_contact);
     
 
     //check for more contacts and add them to the array

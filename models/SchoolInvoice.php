@@ -8,6 +8,7 @@ class SchoolInvoice extends DbObject {
     public $total_charge;
     public $dt_sent;
     public $dt_paid;
+    public $is_ammended;
     
     public function getStudent() {
         return SchoolService::getInstance($this->w)->GetStudentForId($this->student_id);
@@ -25,6 +26,10 @@ class SchoolInvoice extends DbObject {
         }
         $this->total_charge = $newTotal;
         $this->Update();
+    }
+
+    public function GetAttachmentId() {
+        
     }
 
 }

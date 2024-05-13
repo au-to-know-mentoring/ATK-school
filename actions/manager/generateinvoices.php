@@ -81,8 +81,12 @@ function generateinvoices_POST(Web $w) {
                 $invoice_line = new SchoolInvoiceLine($w);
                 $invoice_line->invoice_id = $invoice->id;
                 $invoice_line->class_instance_id = $session->id;
+                $invoice_line->dt_class_date = $session->dt_class_date;
+                $invoice_line->duration = $session->duration;
+                $invoice_line->rate = $class_data->rate;
+                $invoice_line->invoice_line_item = $class_data->invoice_line_item;
                 //calculate amount = rate * duration
-                $invoice_line->amount = $class_data->rate * $class_data->duration;
+                $invoice_line->amount = $invoice_line->rate * $invoice_line->duration;
                 $invoice_line->insertOrUpdate();
                 $total_charge += $invoice_line->amount;
             }

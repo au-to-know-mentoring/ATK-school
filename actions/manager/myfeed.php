@@ -40,7 +40,8 @@ function myfeed_ALL(Web $w) {
             //$startDate = 
             if (empty($p['teacher_id'])) {
                 $start = date('Y-m-d H:i', $class_instance->dt_class_date);
-                $end = date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60));
+                $duration = !empty($class_instance->duration) ? $class_instance->duration : $class_data->duration;
+                $end = date('Y-m-d H:i', $class_instance->dt_class_date + ($duration * 60 * 60));
             } else {
                 $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['teacher_id']);
                 $dtz = new DateTimeZone($teacher->timezone);
@@ -49,7 +50,8 @@ function myfeed_ALL(Web $w) {
                 //var_dump($time);
                 $time->setTimestamp($class_instance->dt_class_date);
                 $start = $time->format('Y-m-d H:i');
-                $time->setTimestamp($class_instance->dt_class_date + ($class_data->duration * 60 * 60));
+                $duration = !empty($class_instance->duration) ? $class_instance->duration : $class_data->duration;
+                $time->setTimestamp($class_instance->dt_class_date + ($duration * 60 * 60));
                 $end = $time->format('Y-m-d H:i');
                 //var_dump($start); die;
             }

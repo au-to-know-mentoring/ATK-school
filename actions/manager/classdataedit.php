@@ -51,12 +51,16 @@ function classdataedit_GET(Web $w) {
             [
                 //['Is Recurring', 'checkbox', 'is_recurring', $class_data->is_recurring],
                 ['Frequency', 'select', 'frequency', $class_data->frequency, $frequencySelectArray],
-                (new \Html\Form\InputField\Number())->setLabel("Duration (Hours)")->setName("duration")->setValue($class_data->duration)
+                ["Duration (Hours)", 'text', 'duration', $class_data->duration]
+                //(new \Html\Form\InputField\Number())->setLabel("Duration (Hours)")->setName("duration")->setValue($class_data->duration)
             ],
             [
                 ['End Date (Optional)', 'date', 'end_date', $class_data->getEndDate()],
                 ['Status', 'select', 'status', $class_data->status, $statusSelectArray],
-                (new \Html\Form\InputField())->setType('decimal')->setLabel('Rate')->setName('rate')->setValue($class_data->rate)
+            ],
+            [
+                ['Invoice Line Item', 'text', 'invoice_line_item', $class_data->invoice_line_item],
+                (new \Html\Form\InputField())->setType('decimal')->setLabel('Rate (Per Hour)')->setName('rate')->setValue($class_data->rate)
             ],
             [
                 ['Link', 'text', 'link', $class_data->link]
@@ -100,6 +104,7 @@ function classdataedit_POST(Web $w) {
     }
 
     $class_data->fill($_POST);
+    //$class_data->duration = empty($class_data->duration) ? null : floatval($class_data->duration);
     $class_data->student_id = $student->id;
 
     //check which timezone the start time value is for
@@ -141,6 +146,7 @@ function classdataedit_POST(Web $w) {
         $class_data->dt_end_date = $end_dt_object->format('Y-m-d H:i:s');
     }
 
+    //var_dump($class_data->duration); die;
     $class_data->insertOrUpdate();
     
     $msg = "class data saved";
