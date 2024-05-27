@@ -135,23 +135,32 @@ class SchoolClassData extends DbObject {
     }
 
     public function GetInstanceForCurrentWeek() {
-        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance',['is_deleted'=> 0, "class_data_id"=> $this->id, "dt_class_date >= ? "=> date('Y-m-d 00:00:00',strtotime('last sunday')), "dt_class_date <= ? "=> date('Y-m-d 23:59:59',strtotime('next sunday'))]);
+        $dt_lastSunday = new DateTime("last sunday");
+        $dt_nextSunday = new DateTime('next sunday');
+
+        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance',['is_deleted'=> 0, "class_data_id"=> $this->id, "dt_class_date >= ? "=>  $dt_lastSunday->format('Y-m-d 00:00:00'), "dt_class_date <= ? "=> $dt_nextSunday->format('Y-m-d 00:00:00')]);
 
         //var_dump(date('Y-m-d 23:59:59',strtotime('next sunday')));
-
+       
+        
         $instance = '';
         if (empty($instances)) {
+
             //check if the class has started or is starting this week
             // echo "dt class date = <br><pre>";
             // var_dump($this->dt_class_date);
             // echo "</pre><br>next sunday = <br><pre>";
             // var_dump(strtotime('next sunday')); 
+            // if ($this->dt_class_date <= new DateTime('next sunday'))
+            $dt_test = new DateTime("next sunday");
+            var_dump($dt_test->diff($this->dt_class_date)); die;
+
             if ($this->dt_class_date <= new DateTime('next sunday')) {
                 $instance = new SchoolClassInstance($this->w);
                 $instance->class_data_id = $this->id;
                 
               
-                $dt_today = new DateTime('now');
+                $dt_today = new DateTime('now', New DateTimeZone($_SESSION['usertimezone']));
 
                 $instance->dt_class_date = $dt_today->format('Y-m-d H:i:s') . " " . $this->dt_class_date->format('l H:i:s') . " this week";
                 //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));

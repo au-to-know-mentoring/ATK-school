@@ -40,16 +40,16 @@ function myfeed_ALL(Web $w) {
             //$startDate = 
             if (empty($p['teacher_id'])) {
                 
-                $start = $class_instance->dt_class_date;
-                $end = $class_instance->dt_class_date->modify("+" . $class_data->duration . "hours");
+                $start = $class_data->dt_class_date;
+                $end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
             } else {
                 $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['teacher_id']);
                 //var_dump($class_instance->dt_class_date); die;
                 $time = new DateTime("now", new DateTimeZone($teacher->timezone));    
 
-                $start = $class_instance->dt_class_date;
+                $start = $class_data->dt_class_date;
                 
-                $end = $class_instance->dt_class_date->modify("+" . $class_data->duration . "hours");
+                $end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
                 
             }
             

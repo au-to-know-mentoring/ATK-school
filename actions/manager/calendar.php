@@ -53,8 +53,8 @@ function calendar_ALL(Web $w) {
             $class_instances[] = $ci;
         }
     }
-
-  //  var_dump($class_instances);
+    
+//    var_dump($class_instances);
 
     $calendarEvents = [];
 
@@ -65,14 +65,18 @@ function calendar_ALL(Web $w) {
             // var_dump($class_instance);
             // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
             $class_data = $class_instance->getClassData();
-            $dt_end = $class_instance->dt_class_date->modify("+" . $class_data->duration . "hours");
+            
+            // var_dump(formatDate($class_data->dt_class_date, "Y-m-d H:i", $_SESSION['usertimezone']));
+            $dt_end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
+          
+
             $event = [
                 'title'=> $class_instance->getCalendarTitle(), // a property!
                 // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
                 // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
-                'start'=> $class_instance->dt_class_date->format('Y-m-d H:i'), // a property!
+                'start'=> formatDate($class_data->dt_class_date, "Y-m-d H:i", $_SESSION['usertimezone']), // a property!
                 
-                'end'=> $dt_end->format('Y-m-d H:i'),
+                'end'=> formatDate($dt_end, "Y-m-d H:i", $_SESSION['usertimezone']),
                 
             ];
             $calendarEvents[] = $event;

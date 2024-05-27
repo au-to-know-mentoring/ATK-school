@@ -44,8 +44,8 @@ function myfeed_ALL(Web $w) {
                 'title'=> $class_instance->getCalendarTitle(), // a property!
                 // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
                 // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
-                'start'=> date('Y-m-d H:i', $class_instance->dt_class_date), // a property!
-                'end'=> date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60)),
+                'start'=> formatDate($class_data->dt_class_date, 'Y-m-d H:i', $_SESSION['usertimezone']), // a property!
+                'end'=> formatDate($class_data->dt_class_date->modify("+" . $class_data->duration . "hours"), 'Y-m-d H:i', $_SESSION['usertimezone']),
                 'url'=> '/school-teacher/viewclassinstance/' . $class_instance->id,
             ];
             $calendarEvents[] = $event;
