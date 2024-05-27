@@ -38,13 +38,13 @@ class SchoolClassData extends DbObject {
        
         switch ($this->status) {
             case "pending":
-                $date = $this->dt_class_date->format('l d/m/Y');
+                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone']); 
                 break;
             case "active":
                 //find next date with same day name
                 
                 //$date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
-                $date = $this->dt_class_date->format('l d/m/Y');
+                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone']); 
               
                 //  date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
                 
