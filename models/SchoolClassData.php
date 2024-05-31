@@ -15,10 +15,12 @@ class SchoolClassData extends DbObject {
     public $notes;
     public $rate;
 
+
+    // error a non well formed numeric value encountered unless strtotime used returned 10:33am when used in classdateedit
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');
         if (!empty($this->dt_class_date)) {
-            return date('H:i', $this->dt_class_date);
+            return date('H:i', strtotime($this->dt_class_date));
         }
         return null;
     }
@@ -40,7 +42,7 @@ class SchoolClassData extends DbObject {
             case "active":
                 //find next date with same day name
 
-                $date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
+                $date = date('l d/m/Y', "next " . date('l', $this->dt_class_date));
 
                 break;
             case "on hold":
@@ -49,6 +51,7 @@ class SchoolClassData extends DbObject {
         return $date;
     }
 
+    // Class date edit front end form shows correct date but other page shows wrong date.  When type cast to string its reversed could web be causing an issue
     public function getStartDate() {
         if (!empty($this->dt_class_date)) {
             return date('d/m/Y', $this->dt_class_date);
@@ -71,14 +74,14 @@ class SchoolClassData extends DbObject {
             return null;
         }
 
-        // retrieve instances from request date range       
-        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['start'])), "dt_class_date <= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
+        // retrieve instances from request date range / if instance is edited we want to get it still so we dont recreate a new one
+        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, /*'is_edited' => 0,*/ "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['start'])), "dt_class_date <= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
 
 
 
         $instance = '';
         if (empty($instances)) {
-            
+
             $createInstance = false;
             //Check if is_recurring is false and frequency is "one off"
             if (!$this->is_recurring && $this->frequency == "one off") {
@@ -101,7 +104,7 @@ class SchoolClassData extends DbObject {
                 }
             }
 
-            // Is monthly first weekday of month ie 30/31days or 4 weekly
+            // check if its recurring and frequency is 4 weekly (21days)
             else if ($this->is_recurring && $this->frequency == "four weekly") {
 
                 $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
@@ -135,9 +138,6 @@ class SchoolClassData extends DbObject {
         } else {
             if (count($instances) == 1) {
                 $instance = $instances[0];
-
-              
-
             } else {
                 var_dump($instances);
             }

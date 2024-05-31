@@ -9,19 +9,28 @@ class SchoolClassInstance extends DbObject {
     public $teachers_notes;
     public $is_edited;
 
+
     public function GetFormattedDate() {
         return date('d/m/Y', $this->dt_class_date);
     }
-    
+
+    // showing wrong time.
+    public function getStartTime() {
+        //return formatDate($this->dt_class_date, 'H:i');
+        if (!empty($this->dt_class_date)) {
+            return date('H:i', $this->dt_class_date);
+        }
+        return null;
+    }
+
     public function getClassData() {
         return SchoolService::getInstance($this->w)->GetClassDataForId($this->class_data_id);
     }
-   
+
     public function getTeacher() {
         if (!empty($this->substitute_teacher_id)) {
             return SchoolService::getInstance($this->w)->GetTeacherForId($this->substitute_teacher_id);
         } else {
-            
         }
         return $this->getClassData()->getTeacher();
     }
@@ -56,12 +65,12 @@ class SchoolClassInstance extends DbObject {
 
         $studentName = $class_data->getStudent()->getContact()->getFullName();
         $teacherName = $this->getTeacher()->getContact()->getFullName();
-         
-       
+
+
 
 
         $title .= $studentName . ' with ' . $teacherName;
-        return $title; 
+        return $title;
     }
 
     public function is_invoiced() {
@@ -71,5 +80,4 @@ class SchoolClassInstance extends DbObject {
         }
         return false;
     }
-
 }

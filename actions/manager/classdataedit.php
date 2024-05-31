@@ -146,83 +146,82 @@ function classdataedit_POST(Web $w) {
     // var_dump($class_data); die;
     $class_data->insertOrUpdate();
 
-    // Get instances of this class data IF it is unedited / scheduled
-    $instances = SchoolService::getInstance($w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $p['class_data_id'], 'is_edited' => 0]); // get only future dates
 
-    // Get each instance that needs editing
-    foreach($instances as $instance){
-        // Get ClassData for instances
 
-        //Change time from instance old to new class time.
 
-        // var_dump($class_data->dt_class_date);
 
+    // Get instances of this class data IF it is unedited / dont want to get it if edited as it wont need changing // GET ONLY FUTURE DATES WHY CHANGE OLD ONES???
+    $instances = SchoolService::getInstance($w)->GetObjects('SchoolClassInstance', ['status' => 'Scheduled', 'is_deleted' => 0, "class_data_id" => $p['class_data_id'], 'is_edited' => 0, "dt_class_date >= ? " => date('Y-m-d 00:00:00')]); // get only future dates
+
+
+
+
+    foreach ($instances as $instance) {
+
+        // Check if class start time or weekday is edited.
+        // Check class start time against class instance
+        $classTime = $class_data->getStartTime();  // showing wrong time.  when converting from $class_data->dt_class_date its correct
+
+
+        // $dt_test = DateTime::createFromFormat('H:i', $classTime, new DateTimeZone('UTC'));
+        // var_dump($dt_test);
+
+
+        // var_dump($classTime);
+        // die;
+
+        $instanceTime = $instance->getStartTime();
+
+        // Check if class time and instance time is the same.
+        if ($classTime != $instanceTime) {
+            //Now we know we need to change instance time to match the class time
+            $newTime = $instance->GetFormattedDate() . " " . $classTime;
+
+            // var_dump($newTime);
+            // die;
+            $instance->dt_class_date = $newTime;
+        }
+
+        // Returning 01/01/1970   A non well formed numeric value encountered in /var/www/html/modules/school/models/SchoolClassInstance.php on line 13 if function isnt type cast to string else it shows same date 1970 on the web front end
+
+        // var_dump($instance->dt_class_date);  // date appears 'd/m/Y H:i'
         // echo "<br>";
+        // var_dump($class_data->dt_class_date); // date appears 'Y-m-d H:i:s'
+        // // die;
 
-        // var_dump($instance->dt_class_date);
+        $classDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $class_data->dt_class_date);
 
-        $instance_date = new DateTime(date('Y-m-d', $instance->dt_class_date));
-        $class_date = new DateTime($class_data->dt_class_date);
+        $classDayNo = $classDateTime->format('N');
+        // var_dump($classDayNo);
 
-       
-
-        //There is no feed/$_REQUEST to generate week start time
-        // Iterate over each week even if edited but dont change the ones that are edited
-        // issue of deleting instances and them reappearing from feed when scrolling weeks
-       
+        $instanceDateTime = DateTime::createFromFormat('d/m/Y H:i', $instance->dt_class_date);
 
 
-      
-        $class_date = date_create($class_date->format('Y-m-d'));
-        $instance_date = date_create($instance_date->format('Y-m-d'));
+        $instanceDayNo = $instanceDateTime->format('N');
 
-        // echo "<br> Class Date <br>";
-        // var_dump($class_date->format('Y-m-d H:i:s'));
+        // var_dump($instanceDayNo);
 
-       
-        // echo "<br> Instance Date <br>";
-        // var_dump($instance_date->format('Y-m-d H:i:s'));
- 
-        
-   
-        // $instanceNoWeeks = $instance_date->format('W'); 
-        // $classNoWeeks = $instance_date->format('W');
-
-        // var_dump($instanceNoWeeks . " " . $classNoWeeks);        
-
-
-    
-        // Gets days difference
-        $difference = $class_date->diff($instance_date);
-        // var_dump($difference->format("%r%a"));  //Returns positive or negative value
-
-    
-        // var_dump($difference->format("%r%a") % 7); die;
-        $days_difference = ($difference->format("%r%a"));
-
-        // var_dump($days_difference); 
-
-
-        // FOR GOING BACKWARDS HOW DO I GO FORWARDS
-        $days_difference = $days_difference - ($days_difference % 7);  // days different from Class Date!!!!! 
-
-
-        var_dump($days_difference); 
-
-            
-        $newDate = $class_date->modify($days_difference . " days");
+        $daysDifference = (int)$classDayNo - (int)$instanceDayNo;
+        var_dump($daysDifference);
+        // die;
 
 
 
+        // Now we need to check the day of the week of the instance and see if it matches the class
+        if ($instanceDayNo != $classDayNo) {
+            //Now we know we need to change the day of the week of the instance to match class time
+            $instanceDateTime->modify($daysDifference . " days");
+            var_dump($instanceDateTime->format('d/m/Y H:i'));
+            echo "<br>";
+            var_dump($instanceDateTime->format('N'));
+        }
 
-        $instanceNewDate = new DateTime($newDate->format('Y-m-d') . $class_date->format('H:i:s'));
+        $instance->dt_class_date = $instanceDateTime->format('d/m/Y H:i');
+        $instance->insertOrUpdate();
+    }
 
-        
-        var_dump($instanceNewDate->format('Y-m-d')); 
-
-    
-    } 
     die;
+
 
 
     $msg = "class data saved";
