@@ -51,7 +51,7 @@ class SchoolClassData extends DbObject {
         return $date;
     }
 
-    // Class date edit front end form shows correct date but other page shows wrong date.  When type cast to string its reversed could web be causing an issue
+    // Class date edit front end form shows correct date but other page shows wrong date.
     public function getStartDate() {
         if (!empty($this->dt_class_date)) {
             return date('d/m/Y', $this->dt_class_date);

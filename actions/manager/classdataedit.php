@@ -171,38 +171,34 @@ function classdataedit_POST(Web $w) {
         // die;
 
         $instanceTime = $instance->getStartTime();
-
         // Check if class time and instance time is the same.
         if ($classTime != $instanceTime) {
             //Now we know we need to change instance time to match the class time
-            $newTime = $instance->GetFormattedDate() . " " . $classTime;
+            $newTime = DateTime::createFromFormat('d/m/Y H:i', $instance->GetFormattedDate() . " " . $classTime);
 
-            // var_dump($newTime);
+            // var_dump($newTime->format('Y-m-d H:i:s'));
+
+            $formattedDate = $newTime->format('Y-m-d H:i:s');
             // die;
-            $instance->dt_class_date = $newTime;
+            $instance->dt_class_date = strtotime($formattedDate);
         }
 
-        // Returning 01/01/1970   A non well formed numeric value encountered in /var/www/html/modules/school/models/SchoolClassInstance.php on line 13 if function isnt type cast to string else it shows same date 1970 on the web front end
 
-        // var_dump($instance->dt_class_date);  // date appears 'd/m/Y H:i'
-        // echo "<br>";
-        // var_dump($class_data->dt_class_date); // date appears 'Y-m-d H:i:s'
-        // // die;
 
         $classDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $class_data->dt_class_date);
 
         $classDayNo = $classDateTime->format('N');
         // var_dump($classDayNo);
 
-        $instanceDateTime = DateTime::createFromFormat('d/m/Y H:i', $instance->dt_class_date);
 
+        $instanceDateTime = DateTime::createFromFormat('d/m/Y H:i', $instance->GetFormattedDate() . $instance->getStartTime());
 
         $instanceDayNo = $instanceDateTime->format('N');
 
         // var_dump($instanceDayNo);
 
         $daysDifference = (int)$classDayNo - (int)$instanceDayNo;
-        var_dump($daysDifference);
+        // var_dump($daysDifference);
         // die;
 
 
@@ -211,16 +207,18 @@ function classdataedit_POST(Web $w) {
         if ($instanceDayNo != $classDayNo) {
             //Now we know we need to change the day of the week of the instance to match class time
             $instanceDateTime->modify($daysDifference . " days");
-            var_dump($instanceDateTime->format('d/m/Y H:i'));
+            // var_dump($instanceDateTime->format('Y-m-d H:i:s'));
             echo "<br>";
-            var_dump($instanceDateTime->format('N'));
-        }
+            // var_dump($instanceDateTime->format('N'));
 
-        $instance->dt_class_date = $instanceDateTime->format('d/m/Y H:i');
+            $formattedDate = $instanceDateTime->format('Y-m-d H:i:s');
+        }
+        // die;
+        $instance->dt_class_date = strtotime($formattedDate);
         $instance->insertOrUpdate();
     }
 
-    die;
+    // die;
 
 
 
