@@ -2,6 +2,11 @@
 
 
 function myfeed_ALL(Web $w) {
+   
+
+
+    // var_dump($_REQUEST); die;
+
     
     $w->setLayout(null);
     $p = $w->pathMatch('teacher_id');
@@ -16,7 +21,8 @@ function myfeed_ALL(Web $w) {
     }
    
     // echo "<pre>";
-    // var_dump($classes);
+
+    
 
     $class_instances = [];
 
@@ -38,26 +44,43 @@ function myfeed_ALL(Web $w) {
             // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
             $class_data = $class_instance->getClassData();
             //$startDate = 
-            if (empty($p['teacher_id'])) {
+            // if (empty($p['teacher_id'])) {
                 
-                $start = $class_data->dt_class_date;
-                $end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
-            } else {
-                $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['teacher_id']);
-                //var_dump($class_instance->dt_class_date); die;
-                $time = new DateTime("now", new DateTimeZone($teacher->timezone));    
+            //     $start = $class_instance->dt_class_date;
+            //     $end = $class_instance->dt_class_date->modify("+" . $class_data->duration . "hours");
+            // } else {
+            //     $teacher = SchoolService::getInstance($w)->GetTeacherForId($p['teacher_id']);
+            //     //var_dump($class_instance->dt_class_date); die;
+            //     $time = new DateTime("now", new DateTimeZone($teacher->timezone));    
 
-                $start = $class_data->dt_class_date;
+            //     $start = $class_instance->dt_class_date;
                 
-                $end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
+            //     $end = $class_instance->dt_class_date->modify("+" . $class_data->duration . "hours");
                 
-            }
+            // }
+
+            // $start = $class_instance->dt_class_date->modify("-" . $class_data->duration . "h");
             
+            // $end = $class_instance->dt_class_date;
+
+            
+            // var_dump($class_instance->dt_class_date);
+
+            $start = $class_instance->dt_class_date;
+            
+            $end = $class_instance->dt_class_date;
+
+            
+            // var_dump($class_instance->dt_class_date);
+           
+
+            // var_dump($end);
+
             $event = [
                 'title'=> $class_instance->getCalendarTitle(), 
                 // use formatDate() for all of these it works and is more understandable. 
-                'start'=> formatDate($start->modify("-" . $class_data->duration . "hours"), 'Y-m-d H:i', $_SESSION['usertimezone']), 
-                'end'=> formatDate($end, 'Y-m-d H:i', $_SESSION['usertimezone']), 
+                'start'=> formatDate($start, 'Y-m-d H:i', $_SESSION['usertimezone']), 
+                'end'=> formatDate($end->add(new DateInterval("PT" . $class_data->duration . "H")), 'Y-m-d H:i', $_SESSION['usertimezone']), 
                 'url'=> '/school-teacher/viewclassinstance/' . $class_instance->id,
                 'className' => $class_instance->status,
             ];

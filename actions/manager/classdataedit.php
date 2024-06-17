@@ -129,9 +129,17 @@ function classdataedit_POST(Web $w) {
              
         //echo "<pre>";
         //var_dump(new DateTime($time_object->getTimestamp())->format('Y-m-d H:i:s')); die;
+
      
         $class_data->dt_end_date = $end_time_object;//->format('Y/m/d H:i:s');
+
+
+    $Dt_daylight_savings_check = new DateTime("now", new DateTimeZone($_POST['timezone']));
     
+    $class_data->daylight_savings_offset = $Dt_daylight_savings_check->format("O");
+
+  
+ 
         
     $class_data->insertOrUpdate();
     

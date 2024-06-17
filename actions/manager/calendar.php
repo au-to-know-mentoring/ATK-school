@@ -45,67 +45,67 @@ function calendar_ALL(Web $w) {
 
 
 
-    $class_instances = [];
+//     $class_instances = [];
 
-    foreach ($classes as $class) {
-        $ci = $class->GetInstanceForCurrentWeek();
-        if (!empty($ci)) {
-            $class_instances[] = $ci;
-        }
-    }
+//     foreach ($classes as $class) {
+//         $ci = $class->GetInstanceForCurrentWeek();
+//         if (!empty($ci)) {
+//             $class_instances[] = $ci;
+//         }
+//     }
     
-//    var_dump($class_instances);
+// //    var_dump($class_instances);
 
-    $calendarEvents = [];
+//     $calendarEvents = [];
 
-    if (!empty($class_instances)) {
-        foreach ($class_instances as $class_instance) {
+//     if (!empty($class_instances)) {
+//         foreach ($class_instances as $class_instance) {
             
-            // echo "<pre>";
-            // var_dump($class_instance);
-            // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
-            $class_data = $class_instance->getClassData();
+//             // echo "<pre>";
+//             // var_dump($class_instance);
+//             // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
+//             $class_data = $class_instance->getClassData();
             
-            // var_dump(formatDate($class_data->dt_class_date, "Y-m-d H:i", $_SESSION['usertimezone']));
-            $dt_end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
+//             // var_dump(formatDate($class_data->dt_class_date, "Y-m-d H:i", $_SESSION['usertimezone']));
+//             $dt_end = $class_data->dt_class_date->modify("+" . $class_data->duration . "hours");
           
 
-            $event = [
-                'title'=> $class_instance->getCalendarTitle(), // a property!
-                // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
-                // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
-                'start'=> formatDate($class_data->dt_class_date, "Y-m-d H:i", $_SESSION['usertimezone']), // a property!
+//             $event = [
+//                 'title'=> $class_instance->getCalendarTitle(), // a property!
+//                 // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
+//                 // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
+//                 'start'=> formatDate($class_data->dt_class_date, "Y-m-d H:i", $_SESSION['usertimezone']), // a property!
                 
-                'end'=> formatDate($dt_end, "Y-m-d H:i", $_SESSION['usertimezone']),
+//                 'end'=> formatDate($dt_end, "Y-m-d H:i", $_SESSION['usertimezone']),
                 
-            ];
-            $calendarEvents[] = $event;
-        }
-    }
+//             ];
+//             $calendarEvents[] = $event;
+//         }
+//     }
 
-   // get availabiliity for teacher
-    if (!empty($teacher_availability)) {
-        foreach ($teacher_availability as $availability) {
-            // echo "<pre>";
-            // var_dump($class_instance);
-            // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
-            $event = [
-                'title'=> $availability->type, // a property!
-                // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
-                // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
-                'start'=> $availability->getStartForCurrentWeek(), // a property!
-                'end'=> $availability->getEndForCurrentWeek(),
-                'className'=> $availability->type,
+//    // get availabiliity for teacher
+//     if (!empty($teacher_availability)) {
+//         foreach ($teacher_availability as $availability) {
+//             // echo "<pre>";
+//             // var_dump($class_instance);
+//             // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
+//             $event = [
+//                 'title'=> $availability->type, // a property!
+//                 // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
+//                 // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
+//                 'start'=> $availability->getStartForCurrentWeek(), // a property!
+//                 'end'=> $availability->getEndForCurrentWeek(),
+//                 'className'=> $availability->type,
                 
-            ];
-            $calendarEvents[] = $event;
-        }
-    }
-  //  echo "<pre>";
-   // var_dump($calendarEvents);
+//             ];
+//             $calendarEvents[] = $event;
+//         }
+//     }
+//   //  echo "<pre>";
+//    // var_dump($calendarEvents);
 
 
-    $w->ctx('events', json_encode($calendarEvents));
-    // var_dump(json_encode($calendarEvents)); die;
+//     $w->ctx('events', json_encode($calendarEvents));
+//     // var_dump(json_encode($calendarEvents)); die;
 
 }

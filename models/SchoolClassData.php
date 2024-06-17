@@ -14,6 +14,7 @@ class SchoolClassData extends DbObject {
     public $topic;
     public $notes;
     public $rate;
+    public $daylight_savings_offset;
     
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');
@@ -83,11 +84,12 @@ class SchoolClassData extends DbObject {
         // }
 
         // var_dump($dateArray);
+        // var_dump("hi"); die;
       
 
         $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance',['is_deleted'=> 0, "class_data_id"=> $this->id, "dt_class_date >= ? "=> $dateArray['start'], "dt_class_date <= ? "=> $dateArray['end']]);
 
-        
+        // var_dump($instances); die;
 
 
         $instance = '';
@@ -105,6 +107,7 @@ class SchoolClassData extends DbObject {
             $weekdayNumber = $this->dt_class_date->format('%w');
 
             $dt_start = new DateTime($dateArray['start']);
+            // $dt_start->setTimezone(new DateTimeZone("utc"));
             $dt_class = $this->dt_class_date;
             
             $daysDifference = $dt_class->format('w') - $dt_start->format("w");
@@ -114,10 +117,15 @@ class SchoolClassData extends DbObject {
             $dt_startRangeOffset = new DateTime($startRangeOffset);// create DateTime object from string
 
             $dt_OffsetPlusDiff = $dt_startRangeOffset->modify("+" . $daysDifference . "days"); 
+            
+            // var_dump($dt_OffsetPlusDiff);
+            // var_dump($dt_OffsetPlusDiff->getTimezone());
 
             
             $instance->dt_class_date = $dt_OffsetPlusDiff;
            
+            
+
             $instance->status = 'Scheduled';
             $instance->insertOrUpdate();
             $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
@@ -153,7 +161,7 @@ class SchoolClassData extends DbObject {
             // var_dump(strtotime('next sunday')); 
             // if ($this->dt_class_date <= new DateTime('next sunday'))
             $dt_test = new DateTime("next sunday");
-            var_dump($dt_test->diff($this->dt_class_date)); die;
+            // var_dump($dt_test->diff($this->dt_class_date)); die;
 
             if ($this->dt_class_date <= new DateTime('next sunday')) {
                 $instance = new SchoolClassInstance($this->w);
