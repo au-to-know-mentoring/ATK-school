@@ -215,7 +215,7 @@ function classdataedit_POST(Web $w) {
         }
         // die;
         $instance->dt_class_date = strtotime($formattedDate);
-        $instance->insertOrUpdate();
+        // $instance->insertOrUpdate();
     }
 
     // die;
