@@ -42,7 +42,7 @@ class SchoolClassData extends DbObject {
             case "active":
                 //find next date with same day name
 
-                $date = date('l d/m/Y', "next " . date('l', $this->dt_class_date));
+                $date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
 
                 break;
             case "on hold":
