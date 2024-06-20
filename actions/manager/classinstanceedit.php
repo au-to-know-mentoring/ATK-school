@@ -14,7 +14,8 @@ function classinstanceedit_GET(Web $w) {
     }
 
     $class_data = $class_instance->getClassData();
-
+    // var_dump($class_data);
+    // die;
     $student = $class_data->getStudent();
     $student_contact = $student->getContact();
     $teacher = $class_instance->getTeacher();
@@ -34,10 +35,10 @@ function classinstanceedit_GET(Web $w) {
                 ['Link', 'text', 'link', $class_data->link],
                 // ['Status', 'text', 'status', $class_instance->status]
             ],
-        ], 
+        ],
         'Participant Details' => [
             [
-                ['Participant Name', 'text', 'student_name', Html::a("/school-manager/studentview/" . $student->id, $student_contact->getFullName()) ],
+                ['Participant Name', 'text', 'student_name', Html::a("/school-manager/studentview/" . $student->id, $student_contact->getFullName())],
                 ['Participant Phone', 'text', 'student_number', $student_contact->mobile],
             ]
         ],
@@ -49,9 +50,9 @@ function classinstanceedit_GET(Web $w) {
         ],
         'Mentor Details' => [
             [
-                ['Mentor Name', 'text', 'teacher_name', Html::a("/school-manager/teacherview/" . $teacher->id, $teacher_contact->getFullName()) ],
+                ['Mentor Name', 'text', 'teacher_name', Html::a("/school-manager/teacherview/" . $teacher->id, $teacher_contact->getFullName())],
                 ['Mentor Phone', 'text', 'teacher_number', $teacher_contact->mobile],
-                
+
             ],
         ],
         'Notes' => [
@@ -71,16 +72,16 @@ function classinstanceedit_GET(Web $w) {
 
     $form = [
         'Session Instance Edit' => [
-            
+
             [
                 ['Timezone', 'select', 'timezone', 'Australia/Sydney', SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
             ],
             [
-                ['Session Date', 'date', 'start_date', date('d/m/Y', $class_instance->dt_class_date)], 
+                ['Session Date', 'date', 'start_date', date('d/m/Y', $class_instance->dt_class_date)],
                 //['Class Start Time', 'text', 'start_time', $class_data->getStartTime()],
                 (new \Html\Form\InputField([
                     "id|name"        => "start_time",
-                    "value"            => date('H:i', $class_instance->dt_class_date), //change this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    "value"            => date('H:i', $class_instance->dt_class_date), //change this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  CONVERTING FROM GMT TO MY SYDNEY TIMEZONE
                     "pattern"        => "^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\s+)?(AM|PM|am|pm)?$",
                     "placeholder"    => "12hr format: 11:30pm or 24hr format: 23:30",
                     "required"        => "true"
@@ -93,7 +94,7 @@ function classinstanceedit_GET(Web $w) {
             [
                 ['Notes', 'textarea', 'notes', $class_instance->teachers_notes]
             ]
-                  
+
         ]
     ];
 
@@ -105,7 +106,6 @@ function classinstanceedit_GET(Web $w) {
 
 
     $w->ctx('form', Html::multiColForm($form, '/school-manager/classinstanceedit/' . $class_instance->id));
-
 }
 
 function classinstanceedit_POST(Web $w) {
@@ -148,6 +148,4 @@ function classinstanceedit_POST(Web $w) {
     $class_instance->insertOrUpdate();
 
     $w->msg('Session updated', '/school-manager/viewclassinstance/' . $class_instance->id);
-    
-
 }
