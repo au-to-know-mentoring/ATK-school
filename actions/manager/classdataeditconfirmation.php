@@ -85,8 +85,12 @@ function classdataeditconfirmation_ALL(Web $w) {
         $instanceCounter++;
     }
 
-    var_dump($instanceCounter);
-    die;
+    // var_dump($instanceCounter);
+    // die;
+
+    $w->ctx('title', 'Confirm editing of existing calendar events');
+
+
 
     foreach ($instances as $instance) {
 
