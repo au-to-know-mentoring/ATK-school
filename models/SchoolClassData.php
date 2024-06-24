@@ -14,13 +14,13 @@ class SchoolClassData extends DbObject {
     public $topic;
     public $notes;
     public $rate;
+    public $daylight_savings_offset;
 
-
-    // error a non well formed numeric value encountered unless strtotime used returned 10:33am when used in classdateedit
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');
         if (!empty($this->dt_class_date)) {
-            return date('H:i', strtotime($this->dt_class_date));
+
+            return formatDate($this->dt_class_date, 'H:i', $_SESSION['usertimezone']);
         }
         return null;
     }
@@ -34,107 +34,102 @@ class SchoolClassData extends DbObject {
     }
 
     public function getNextDate() {
+
         $date = '';
+
         switch ($this->status) {
             case "pending":
-                $date = date('l d/m/Y', $this->dt_class_date);
+                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone']);
                 break;
             case "active":
                 //find next date with same day name
 
-                $date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
+                //$date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
+                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone']);
+
+                //  date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
 
                 break;
             case "on hold":
             case "completed":
         }
+
+
         return $date;
     }
 
     // Class date edit front end form shows correct date but other page shows wrong date.
     public function getStartDate() {
         if (!empty($this->dt_class_date)) {
-            return date('d/m/Y', $this->dt_class_date);
+
+            return formatDate($this->dt_class_date, 'd/m/Y', $_SESSION['usertimezone']);
         }
         return null;
     }
 
     public function getEndDate() {
         if (!empty($this->dt_end_date)) {
-            return date('d/m/Y', $this->dt_end_date);
+            return formatDate($this->dt_end_date, 'd/m/Y', $_SESSION['usertimezone']);
         }
         return null;
     }
 
     public function GetInstanceForRange($dateArray) {
         //first check if class is running within the date range
+        //  var_dump($dateArray);
+        // echo "<br>";
+        // echo 
 
-        // Filter out if date is out of range of the request date
-        if ($this->dt_class_date > strtotime($dateArray['end']) || (!empty($this->dt_end_date) && $this->dt_end_date < strtotime($dateArray['start']))) {
-            return null;
-        }
+        // if ($this->dt_class_date > $dateArray['end'] || (!empty($this->dt_end_date) && $this->dt_end_date < $dateArray['start'])) {
+        //     return null;
+        // }
 
-        // retrieve instances from request date range / if instance is edited we want to get it still so we dont recreate a new one
-        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, /*'is_edited' => 0,*/ "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['start'])), "dt_class_date <= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
+        // var_dump($dateArray);
+        // var_dump("hi"); die;
 
+
+        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => $dateArray['start'], "dt_class_date <= ? " => $dateArray['end']]);
+
+        // var_dump($instances); die;
 
 
         $instance = '';
         if (empty($instances)) {
+            //check if the class has started or is starting this week
+            // echo "dt class date = <br><pre>";
+            // var_dump($this->dt_class_date);
+            // echo "</pre><br>next sunday = <br><pre>";
+            // var_dump(strtotime('next sunday')); 
 
-            $createInstance = false;
-            //Check if is_recurring is false and frequency is "one off"
-            if (!$this->is_recurring && $this->frequency == "one off") {
 
-                if ($this->dt_class_date  < strtotime($dateArray['start']) || $this->dt_class_date > strtotime($dateArray['end'])) {
-                } else {
-                    $createInstance = true;
-                }
-            } else if ($this->is_recurring && $this->frequency == "weekly") {
-                $createInstance = true;
-            } else if ($this->is_recurring && $this->frequency == "fortnightly") {
-                $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
-                $startRangeOffset = date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date);
-                $possibleClassDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifferenceForWeekStart . " days"));  // set new class date
-                $possibleClassDate = new DateTime($possibleClassDate);
-                $initalClassDate = date('Y-m-d', $this->dt_class_date);
-                $initalClassDate = new DateTime($initalClassDate);
-                if (date_diff($initalClassDate, $possibleClassDate)->days % 14 == 0) {
-                    $createInstance = true;
-                }
-            }
+            $instance = new SchoolClassInstance($this->w);
+            $instance->class_data_id = $this->id;
+            $weekdayName = $this->dt_class_date->format('l Y/m/d');
+            $weekdayNumber = $this->dt_class_date->format('%w');
 
-            // check if its recurring and frequency is 4 weekly (21days)
-            else if ($this->is_recurring && $this->frequency == "four weekly") {
+            $dt_start = new DateTime($dateArray['start']);
+            // $dt_start->setTimezone(new DateTimeZone("utc"));
+            $dt_class = $this->dt_class_date;
 
-                $daysDifferenceForWeekStart = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week 
-                $startRangeOffset = date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date);
-                $possibleClassDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifferenceForWeekStart . " days"));  // set new class date
+            $daysDifference = $dt_class->format('w') - $dt_start->format("w");
 
-                $possibleClassDate = new DateTime($possibleClassDate);
+            $startRangeOffset = $dt_start->format("Y-m-d") . " " . $dt_class->format("H:i:s");
 
-                $initalClassDate = date('Y-m-d', $this->dt_class_date);
-                $initalClassDate = new DateTime($initalClassDate);
+            $dt_startRangeOffset = new DateTime($startRangeOffset); // create DateTime object from string
 
-                if (date_diff($initalClassDate, $possibleClassDate)->days % 28 == 0) {
-                    $createInstance = true;
-                }
-            }
+            $dt_OffsetPlusDiff = $dt_startRangeOffset->modify("+" . $daysDifference . "days");
 
-            if ($createInstance == true) {
-                $instance = new SchoolClassInstance($this->w);
-                $instance->class_data_id = $this->id;
-                // $weekdayName = date('l Y/m/d', $this->dt_class_date);  // get class data weekday name
-                // $weekdayNumber = date('w', $this->dt_class_date); // get class data weekdayNumber
-                $daysDifference = date('w', $this->dt_class_date) - date('w', strtotime($dateArray['start'])); // get days difference from start of week
-                $startRangeOffset = (date('Y-m-d', strtotime($dateArray['start'])) . ' ' . date('H:i:s', $this->dt_class_date));
-                $classDate = date('Y-m-d', strtotime($startRangeOffset . " + " . $daysDifference . " days"));
+            // var_dump($dt_OffsetPlusDiff);
+            // var_dump($dt_OffsetPlusDiff->getTimezone());
 
-                $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
-                $instance->status = 'Scheduled';
-                $instance->insertOrUpdate();
-                $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
-            }
+
+            $instance->dt_class_date = $dt_OffsetPlusDiff;
+
+
+
+            $instance->status = 'Scheduled';
+            $instance->insertOrUpdate();
+            $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
         } else {
             if (count($instances) == 1) {
                 $instance = $instances[0];
@@ -147,18 +142,35 @@ class SchoolClassData extends DbObject {
 
 
     public function GetInstanceForCurrentWeek() {
-        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime('last sunday')), "dt_class_date <= ? " => date('Y-m-d 23:59:59', strtotime('next sunday'))]);
+        $dt_lastSunday = new DateTime("last sunday");
+        $dt_nextSunday = new DateTime('next sunday');
+
+        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " =>  $dt_lastSunday->format('Y-m-d 00:00:00'), "dt_class_date <= ? " => $dt_nextSunday->format('Y-m-d 00:00:00')]);
+
+        //var_dump(date('Y-m-d 23:59:59',strtotime('next sunday')));
+
 
         $instance = '';
         if (empty($instances)) {
 
             //check if the class has started or is starting this week
-            if ($this->dt_class_date <= strtotime('next sunday')) {
+            // echo "dt class date = <br><pre>";
+            // var_dump($this->dt_class_date);
+            // echo "</pre><br>next sunday = <br><pre>";
+            // var_dump(strtotime('next sunday')); 
+            // if ($this->dt_class_date <= new DateTime('next sunday'))
+            $dt_test = new DateTime("next sunday");
+            // var_dump($dt_test->diff($this->dt_class_date)); die;
+
+            if ($this->dt_class_date <= new DateTime('next sunday')) {
                 $instance = new SchoolClassInstance($this->w);
                 $instance->class_data_id = $this->id;
 
-                $instance->dt_class_date = date('Y-m-d H:i:s', strtotime("" . date('l H:i:s', $this->dt_class_date) . " this week"));
 
+                $dt_today = new DateTime('now', new DateTimeZone($_SESSION['usertimezone']));
+
+                $instance->dt_class_date = $dt_today->format('Y-m-d H:i:s') . " " . $this->dt_class_date->format('l H:i:s') . " this week";
+                //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));
                 $instance->insertOrUpdate();
                 $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
             }

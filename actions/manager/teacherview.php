@@ -53,7 +53,7 @@ function teacherview_ALL(Web $w)
             $row = [];
             $row[] = $class->getStudent()->getContact()->getFullName();
             $row[] = $class->getNextDate();
-            $row[] = date('H:i', $class->dt_class_date);
+            $row[] = $class->getStartTime();
             $row[] = $class->frequency;
             $row[] = $class->status;
             $actions = [];

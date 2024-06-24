@@ -24,8 +24,8 @@ function viewclassinstance_ALL(Web $w) {
     $table = [
         'Session Details' => [
             [
-                ['Date', 'text', 'date', date('l d/m/Y', $classInstance->dt_class_date)],
-                ['Time', 'text', 'time', date('H:i', $classInstance->dt_class_date)]
+                ['Date', 'text', 'date', formatDate($classData->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone'])],
+                ['Time', 'text', 'time', formatDate($classData->dt_class_date, 'H:i', $_SESSION['usertimezone'])]
             ],
             [
                 ['Link', 'text', 'link', $classData->link]

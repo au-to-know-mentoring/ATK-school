@@ -59,7 +59,7 @@ class SchoolService extends DbService {
         return $this->getObjects('SchoolInvoiceLine', ['invoice_id' => $invoice_id, 'is_deleted' => 0]);
     }
 
-    public function getInvoicesForFilter($status = "Paid", $student_id, $date_sent_range_start, $date_sent_range_end) {
+    public function getInvoicesForFilter($date_sent_range_start, $date_sent_range_end, $student_id, $status = "Paid") {
         $where = [
             'is_deleted' => 0,
             'status' => $status,
@@ -183,17 +183,19 @@ class SchoolService extends DbService {
     }
 
     public function GetAllClassDataForDateRange($dateArray) {
+        $dt = new DateTime($dateArray['end'], new DateTimeZone("utc"));
         return $this->getObjects('SchoolClassData',['is_deleted'=>0,
             //'status'=>'active',
-            
-            'dt_class_date <= ?'=>date('Y-m-d 00:00:00',strtotime($dateArray['end']))]);
+
+            'dt_class_date <= ?'=>$dt->format('Y-m-d 00:00:00')]);
     }
 
     public function GetAllClassDataForTeacherIdAndDateRange($teacher_id,$dateArray) {
+        $dt = new DateTime($dateArray['end'], new DateTimeZone('utc'));
         return $this->getObjects('SchoolClassData',['is_deleted'=>0,
             'status'=>'active',
             'teacher_id'=>$teacher_id,
-            'dt_class_date <= ?'=>date('Y-m-d 00:00:00',strtotime($dateArray['end']))]);
+            'dt_class_date <= ?'=>$dt->format('Y-m-d 00:00:00')]);
     }
 
     // returns all example item instances
@@ -208,9 +210,10 @@ class SchoolService extends DbService {
 
     public function getPastClassInstancesByStatus($status) {
         //'dt_class_date <= ?'=>date('Y-m-d 00:00:00',strtotime($dateArray['end']))
-        $date = date('Y-m-d 00:00:00', Time());
+        $date = new DateTime("now", new DateTimeZone("utc"));
+        //$date = date('Y-m-d 00:00:00', Time());
 
-        return $this->getObjects('SchoolClassInstance', ['is_deleted'=>0, 'status'=>$status, 'dt_class_date <= ?'=>$date]);
+        return $this->getObjects('SchoolClassInstance', ['is_deleted'=>0, 'status'=>$status, 'dt_class_date <= ?'=>$date->format('Y-m-d 00:00:00')]);
     }
 
     public function GetAllStudentContactsForStudentId($student_id) {

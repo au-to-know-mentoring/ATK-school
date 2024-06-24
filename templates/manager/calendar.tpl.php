@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         center: 'title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay,list'
     },
-    events: '/school-manager/myfeed<?php echo (!empty($teacher_id)) ? '/' . $teacher_id : ''; ?>',
+    events: '/school-manager/myfeed',
     //events: JSON.parse('<?php //echo $events; ?>'),
     contentHeight: 650,
   });

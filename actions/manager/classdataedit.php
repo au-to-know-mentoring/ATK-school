@@ -92,6 +92,7 @@ function classdataedit_POST(Web $w) {
     //     $w->error('No Student found for id', '/school-teacher/studentlist');
     // }
 
+<<<<<<< HEAD
     // if (empty($p['class_data_id'])) {
     //     $class_data = new SchoolClassData($w);
     // } else {
@@ -153,6 +154,53 @@ function classdataedit_POST(Web $w) {
     // // Get instances of this class data IF it is unedited / dont want to get it if edited as it wont need changing // GET ONLY FUTURE DATES WHY CHANGE OLD ONES???
     // $instances = SchoolService::getInstance($w)->GetObjects('SchoolClassInstance', ['status' => 'Scheduled', 'is_deleted' => 0, "class_data_id" => $p['class_data_id'], 'is_edited' => 0, "dt_class_date >= ? " => date('Y-m-d 00:00:00')]); // get only future dates
 
+=======
+    $class_data->fill($_POST);
+    $class_data->student_id = $student->id;
+
+    if ($_POST['frequency'] != 'one off'){
+        $class_data->is_recurring = true;
+    }
+
+    //check which timezone the start time value is for
+    //$time = new DateTime(NULL, new DateTimeZone($timezone));
+    $redirect = '/school-teacher/studentview/' . $student->id;
+
+    
+   
+        $time_object = new DateTime(str_replace('/', '-', $_POST['start_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_SESSION['usertimezone']));
+    
+    //echo "<pre>";
+    // var_dump($time_object); die;
+   
+    $class_data->dt_class_date = $time_object;//->format('Y/m/d H:i:s');
+    
+
+    
+    //end date
+    
+       
+           
+        $end_time_object = new DateTime(str_replace('/', '-', $_POST['end_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_SESSION['usertimezone']));
+             
+        //echo "<pre>";
+        //var_dump(new DateTime($time_object->getTimestamp())->format('Y-m-d H:i:s')); die;
+
+     
+        $class_data->dt_end_date = $end_time_object;//->format('Y/m/d H:i:s');
+
+
+    $Dt_daylight_savings_check = new DateTime("now", new DateTimeZone($_POST['timezone']));
+    
+    $class_data->daylight_savings_offset = $Dt_daylight_savings_check->format("O");
+
+  
+ 
+        
+    $class_data->insertOrUpdate();
+    
+    $msg = "class data saved";
+>>>>>>> 905344930d6a4d0982569a7f0afdcb8e7179f168
 
 
 
