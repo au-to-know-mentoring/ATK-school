@@ -13,7 +13,7 @@ function generateinvoices_GET(Web $w) {
     if (!empty($uninvoices_class_instances)) {
         foreach ($uninvoices_class_instances as $session) {
             $session_form_array[] = [
-                (new \Html\Form\InputField\Text())->setLabel('Session Date')->setValue(date('d/m/Y h:i', $session->dt_class_date))->setName('sessiondate' . $session->id)->setDisabled(true),
+                (new \Html\Form\InputField\Text())->setLabel('Session Date')->setValue(formatDate($session->dt_class_date, 'd/m/Y h:i'))->setName('sessiondate' . $session->id)->setDisabled(true),
                 (new \Html\Form\InputField\Text())->setLabel('Session Status')->setValue($session->status)->setDisabled(true),
                 (new \Html\Form\InputField\Text())->setLabel('Participant Name')->setValue($session->getStudent()->getContact()->getFullName())->setDisabled(true),
                 (new \Html\Form\InputField\Text())->setLabel('Mentor Name')->setValue($session->getTeacher()->getContact()->getFullName())->setDisabled(true),

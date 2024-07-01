@@ -23,13 +23,14 @@ function viewInvoice_ALL(Web $w) {
     $billing_contact = $student->getBillingContact();
     $billing_contact_mapping = $student->getBillingContactMapping();
 
+    // var_dump($student->getFullName()); die;
     //invoice data table
     
     $invoice_data = [
         'Invoice Details' => [
             [
                 ['Invoice Number', 'text', 'invoice_number', $invoice->id],
-                ['Participant Name', 'text', 'participant_name', Html::a('/school-manager/studentview/' . $student->id, $student->getContact()->getFullName())],
+                ['Participant Name', 'text', 'participant_name', Html::a('/school-manager/studentview/' . $student->id, $student->getFullName())],
                 ['Status', 'text', 'invoice_status', $invoice->status],
                 ['Total Amount', 'text', 'totale_charge', formatCurrency($invoice->total_charge)],
                 ['Date Sent', 'text', 'dt_sent', ($invoice->status != 'New') ? date('d/m/Y', $invoice->dt_sent) : 'Not Sent'],
@@ -50,6 +51,7 @@ function viewInvoice_ALL(Web $w) {
     $w->ctx('invoice_data', Html::multiColTable($invoice_data));
 
 
+    //  var_dump($student->getFullName()); 
 
 
 
@@ -62,7 +64,7 @@ function viewInvoice_ALL(Web $w) {
             $session = SchoolService::getInstance($w)->GetClassInstancesForId($line->class_instance_id);
             $class_data = $session->getClassData();
             $row = [];
-            $row[] = date('d/m/Y h:i', $session->dt_class_date);
+            $row[] = formatDate($session->dt_class_date, 'd/m/Y h:i', $class_data->class_date_timezone);
             $row[] = $session->getTeacher()->getContact()->getFullName();
             $row[] = $class_data->duration;
             $row[] = $class_data->rate;

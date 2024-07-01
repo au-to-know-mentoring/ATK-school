@@ -47,7 +47,7 @@ function teacherview_ALL(Web $w)
 
     $classes_table = [];
     $classes = SchoolService::getInstance($w)->GetAllClassDataForTeacherId($teacher->id);
-    $classes_table_headers = ['Participant','Next Class Date','Time','Frequency', 'Status','Actions'];
+    $classes_table_headers = ['Participant','Next Class Date','Time ' .  $_SESSION['usertimezone'],'Frequency', 'Status','Actions'];
     if (!empty($classes)) {
         foreach ($classes as $class) {
             $row = [];

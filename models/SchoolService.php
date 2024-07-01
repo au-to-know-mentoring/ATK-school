@@ -203,6 +203,8 @@ class SchoolService extends DbService {
         return $this->GetObjects('SchoolClassInstance',['is_deleted'=>0]);
     }
 
+    
+
     // returns a single example item matching the given id
     public function GetClassInstancesForId($id) {
         return $this->GetObject('SchoolClassInstance',$id);
