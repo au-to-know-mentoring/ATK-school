@@ -14,7 +14,7 @@ class SchoolClassData extends DbObject {
     public $topic;
     public $notes;
     public $rate;
-    
+
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');
         if (!empty($this->dt_class_date)) {
@@ -39,9 +39,9 @@ class SchoolClassData extends DbObject {
                 break;
             case "active":
                 //find next date with same day name
-                
+
                 $date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
-                
+
                 break;
             case "on hold":
             case "completed":
@@ -73,7 +73,7 @@ class SchoolClassData extends DbObject {
             return null;
         }
 
-        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance',['is_deleted'=> 0, "class_data_id"=> $this->id, "dt_class_date >= ? "=> date('Y-m-d 00:00:00',strtotime($dateArray['start'])), "dt_class_date <= ? "=> date('Y-m-d 00:00:00',strtotime($dateArray['end']))]);
+        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['start'])), "dt_class_date <= ? " => date('Y-m-d 00:00:00', strtotime($dateArray['end']))]);
 
         $instance = '';
         if (empty($instances)) {
@@ -82,7 +82,7 @@ class SchoolClassData extends DbObject {
             // var_dump($this->dt_class_date);
             // echo "</pre><br>next sunday = <br><pre>";
             // var_dump(strtotime('next sunday')); 
-            
+
             $instance = new SchoolClassInstance($this->w);
             $instance->class_data_id = $this->id;
             $weekdayName = date('l Y/m/d', $this->dt_class_date);
@@ -100,14 +100,12 @@ class SchoolClassData extends DbObject {
             // var_dump($classDate);
             // die;
 
-            
+
             $instance->dt_class_date = $classDate . " " . date('H:i:s', $this->dt_class_date);
             //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));
             $instance->status = 'Scheduled';
             $instance->insertOrUpdate();
             $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
-            
-            
         } else {
             if (count($instances) == 1) {
                 //var_dump($instances);
@@ -120,7 +118,7 @@ class SchoolClassData extends DbObject {
     }
 
     public function GetInstanceForCurrentWeek() {
-        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance',['is_deleted'=> 0, "class_data_id"=> $this->id, "dt_class_date >= ? "=> date('Y-m-d 00:00:00',strtotime('last sunday')), "dt_class_date <= ? "=> date('Y-m-d 23:59:59',strtotime('next sunday'))]);
+        $instances = SchoolService::getInstance($this->w)->GetObjects('SchoolClassInstance', ['is_deleted' => 0, "class_data_id" => $this->id, "dt_class_date >= ? " => date('Y-m-d 00:00:00', strtotime('last sunday')), "dt_class_date <= ? " => date('Y-m-d 23:59:59', strtotime('next sunday'))]);
 
         //var_dump(date('Y-m-d 23:59:59',strtotime('next sunday')));
 
@@ -134,13 +132,12 @@ class SchoolClassData extends DbObject {
             if ($this->dt_class_date <= strtotime('next sunday')) {
                 $instance = new SchoolClassInstance($this->w);
                 $instance->class_data_id = $this->id;
-                
+
                 $instance->dt_class_date = date('Y-m-d H:i:s', strtotime("" . date('l H:i:s', $this->dt_class_date) . " this week"));
                 //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));
                 $instance->insertOrUpdate();
                 $instance = SchoolService::getInstance($this->w)->GetClassInstancesForId($instance->id);
             }
-            
         } else {
             if (count($instances) == 1) {
                 //var_dump($instances);
@@ -152,5 +149,4 @@ class SchoolClassData extends DbObject {
         }
         return $instance;
     }
-
 }

@@ -8,9 +8,8 @@ function myfeed_ALL(Web $w) {
     $teacher_availability = [];
     if (empty($p['teacher_id'])) {
         $classes = SchoolService::getInstance($w)->GetAllClassDataForDateRange($_REQUEST);
-        
     } else {
-        $classes = SchoolService::getInstance($w)->GetAllClassDataForTeacherIdAndDateRange($p['teacher_id'],$_REQUEST);
+        $classes = SchoolService::getInstance($w)->GetAllClassDataForTeacherIdAndDateRange($p['teacher_id'], $_REQUEST);
         $teacher_availability = SchoolService::getInstance($w)->GetTeacherAvailabilityForTeacherId($p['teacher_id']);
     }
 
@@ -27,7 +26,7 @@ function myfeed_ALL(Web $w) {
     }
 
     //var_dump($class_instances);
-    
+
 
     $calendarEvents = [];
 
@@ -38,6 +37,8 @@ function myfeed_ALL(Web $w) {
             // var_dump(date('Y-m-d', strtotime($class_instance->dt_class_date))); die;
             $class_data = $class_instance->getClassData();
             //$startDate = 
+            var_dump($class_instance->dt_class_date);
+            die;
             if (empty($p['teacher_id'])) {
                 $start = date('Y-m-d H:i', $class_instance->dt_class_date);
                 $end = date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60));
@@ -58,12 +59,12 @@ function myfeed_ALL(Web $w) {
             // Us dumb Americans can't handle millitary time
             //ampm = $time->format('H') > 12 ? ' ('. $time->format('g:i a'). ')' : '';
             $event = [
-                'title'=> $class_instance->getCalendarTitle(), // a property!
+                'title' => $class_instance->getCalendarTitle(), // a property!
                 // 'start'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date)), // a property!
                 // 'end'=> date('Y-m-d H:i', strtotime($class_instance->dt_class_date) + ($class_data->duration * 60 * 60)),
-                'start'=> $start, // date('Y-m-d H:i', $class_instance->dt_class_date), // a property!
-                'end'=> $end, //date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60)),
-                'url'=> '/school-teacher/viewclassinstance/' . $class_instance->id,
+                'start' => $start, // date('Y-m-d H:i', $class_instance->dt_class_date), // a property!
+                'end' => $end, //date('Y-m-d H:i', $class_instance->dt_class_date + ($class_data->duration * 60 * 60)),
+                'url' => '/school-teacher/viewclassinstance/' . $class_instance->id,
                 'className' => $class_instance->status,
             ];
             $calendarEvents[] = $event;
@@ -74,12 +75,12 @@ function myfeed_ALL(Web $w) {
     if (!empty($teacher_availability)) {
         foreach ($teacher_availability as $availability) {
             $event = [
-                'title'=> $availability->type, // a property!
-                'start'=> $availability->getStartForCurrentWeek($_REQUEST), // a property!
-                'end'=> $availability->getEndForCurrentWeek($_REQUEST),
-                'url'=> '/school-teacher/editavailability/' . "teacher/" . $p['teacher_id'] . '/' .  $availability->id,  ///////////////
-                'className'=> $availability->type,
-                
+                'title' => $availability->type, // a property!
+                'start' => $availability->getStartForCurrentWeek($_REQUEST), // a property!
+                'end' => $availability->getEndForCurrentWeek($_REQUEST),
+                'url' => '/school-teacher/editavailability/' . "teacher/" . $p['teacher_id'] . '/' .  $availability->id,  ///////////////
+                'className' => $availability->type,
+
             ];
             $calendarEvents[] = $event;
         }
