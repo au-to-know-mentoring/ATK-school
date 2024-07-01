@@ -35,7 +35,7 @@ function classdataedit_GET(Web $w) {
                 ['Topic', 'text', 'topic', $class_data->topic]
             ],
             [
-                ['Timezone', 'select', 'timezone', 'Australia/Sydney', SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
+                ['Timezone (Participent Timezone)', 'select', 'class_date_timezone', $student->timezone , SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
             ],
             [
                 ['Start Date', 'date', 'start_date', $class_data->getStartDate()],
@@ -46,7 +46,7 @@ function classdataedit_GET(Web $w) {
                     "pattern"        => "^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9](\s+)?(AM|PM|am|pm)?$",
                     "placeholder"    => "12hr format: 11:30pm or 24hr format: 23:30",
                     "required"        => "true"
-                ]))->setLabel('Class Start Time')
+                ]))->setLabel('Class Start Time (In Paticipents Timezone)')
             ],
             [
                 //['Is Recurring', 'checkbox', 'is_recurring', $class_data->is_recurring],
@@ -112,20 +112,19 @@ function classdataedit_POST(Web $w) {
 
     
    
-        $time_object = new DateTime(str_replace('/', '-', $_POST['start_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_SESSION['usertimezone']));
+        $time_object = new DateTime(str_replace('/', '-', $_POST['start_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_POST['class_date_timezone']));
     
     //echo "<pre>";
     // var_dump($time_object); die;
    
     $class_data->dt_class_date = $time_object;//->format('Y/m/d H:i:s');
-    
 
     
     //end date
     
        
            
-        $end_time_object = new DateTime(str_replace('/', '-', $_POST['end_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_SESSION['usertimezone']));
+        $end_time_object = new DateTime(str_replace('/', '-', $_POST['end_date']) . ' ' . $_POST['start_time'], new DateTimeZone($_POST['class_date_timezone']));
              
         //echo "<pre>";
         //var_dump(new DateTime($time_object->getTimestamp())->format('Y-m-d H:i:s')); die;
@@ -134,9 +133,9 @@ function classdataedit_POST(Web $w) {
         $class_data->dt_end_date = $end_time_object;//->format('Y/m/d H:i:s');
 
 
-    $Dt_daylight_savings_check = new DateTime("now", new DateTimeZone($_POST['timezone']));
+    // $Dt_daylight_savings_check = new DateTime("now", new DateTimeZone($_POST['timezone']));
     
-    $class_data->daylight_savings_offset = $Dt_daylight_savings_check->format("O");
+    // $class_data->daylight_savings_offset = $Dt_daylight_savings_check->format("O");
 
   
  

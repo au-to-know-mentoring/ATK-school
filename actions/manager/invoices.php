@@ -25,7 +25,7 @@ function invoices_ALL(Web $w) {
     $uninvoicedheaders = ['Class Date', 'Session Status', 'Participant', 'Mentor'];
     foreach($uninvoices_class_instances as $class_instance) {
         $row = [];
-        $row[] = Html::a("/school-manager/viewclassinstance/" . $class_instance->id, date('d/m/Y h:i', $class_instance->dt_class_date));
+        $row[] = Html::a("/school-manager/viewclassinstance/" . $class_instance->id, formatDate($class_instance->dt_class_date, 'd/m/Y h:i'));
         $row[] = $class_instance->status;
         $row[] = $class_instance->getStudent()->getContact()->getFullName();
         $row[] = $class_instance->getTeacher()->getContact()->getFullName();

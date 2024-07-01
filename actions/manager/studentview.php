@@ -196,7 +196,7 @@ function studentview_ALL(Web $w) {
             $row = [];
             $row[] = $class->getTeacher()->getContact()->getFullName();
             $row[] = $class->getNextDate();
-            $row[] = $class->getStartTime();
+            $row[] =  formatDate($class->dt_class_date, 'H:i', $class->class_date_timezone) . " " . $class->class_date_timezone;
             if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
                 $row[] = $class->frequency;
                 $row[] = $class->status;

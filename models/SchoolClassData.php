@@ -5,6 +5,7 @@ class SchoolClassData extends DbObject {
     public $student_id;
     public $teacher_id;
     public $dt_class_date;
+    public $class_date_timezone;
     public $is_recurring;
     public $frequency;
     public $duration; //hours decimal
@@ -14,7 +15,6 @@ class SchoolClassData extends DbObject {
     public $topic;
     public $notes;
     public $rate;
-    public $daylight_savings_offset;
     
     public function getStartTime() {
         //return formatDate($this->dt_class_date, 'H:i');
