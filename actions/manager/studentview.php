@@ -1,22 +1,22 @@
 <?php
 
 function studentview_ALL(Web $w) {
-    $p = $w->pathMatch('student_id','class_data_id');
+    $p = $w->pathMatch('student_id', 'class_data_id');
 
     $loggedInUser = AuthService::getInstance($w)->user();
 
-    
+
 
     if (empty($p['student_id'])) {
         $w->error('No Student Id found', '/school-teacher/studentlist');
     }
 
     $student = SchoolService::getInstance($w)->GetStudentForId($p['student_id']);
-    
+
     if (empty($student)) {
         $w->error('No Student found for id', '/school-teacher/studentlist');
     }
-    
+
     $w->ctx('student_id', $student->id);
 
 
@@ -24,10 +24,10 @@ function studentview_ALL(Web $w) {
 
     $w->ctx('title', $student_name ? $student_name : 'No Name Provided');
 
-    
+
 
     $student_contact = $student->getContact();
-    
+
     $main_contact_mapping = $student->getMainContactMapping();
     $main_is_billing = false;
 
@@ -51,7 +51,7 @@ function studentview_ALL(Web $w) {
     if (!empty($student->timezone)) {
         $time = new DateTime("now", new DateTimeZone($student->timezone));
     }
-    
+
 
 
     $studentData = [
@@ -73,7 +73,7 @@ function studentview_ALL(Web $w) {
         // ]
     ];
 
-    
+
 
     if ($main_is_billing) {
         $main_contact_section_title = "Main and Billing Contact Details";
@@ -81,7 +81,7 @@ function studentview_ALL(Web $w) {
         $main_contact_section_title = "Main Contact Details";
     }
 
-    if (!empty($main_contact)){
+    if (!empty($main_contact)) {
         $studentData[$main_contact_section_title] = [
             [
                 ["Name", "text", "main_contact_name", $main_contact->getFullName()],
@@ -127,8 +127,8 @@ function studentview_ALL(Web $w) {
             ]
         ];
     }
-    
-    
+
+
     //check for billing contact and add to array
     if (!$main_is_billing && !$Secondary_is_billing) {
         $billing_contact_mapping = $student->getBillingContactMapping();
@@ -153,12 +153,12 @@ function studentview_ALL(Web $w) {
         }
     }
 
-    
+
 
     //check for more contacts and add them to the array
     $other_contact_mappings = $student->getContactMappings();
     if (!empty($other_contact_mappings)) {
-        foreach($other_contact_mappings as $contact_mapping) {
+        foreach ($other_contact_mappings as $contact_mapping) {
             $contact = $contact_mapping->getContact();
             $studentData["Contact Details: " . $contact->getFullName()] = [
                 [
@@ -175,9 +175,8 @@ function studentview_ALL(Web $w) {
                 [
                     ["Actions", "text", "editButton", Html::b('/school-manager/studentcontactedit/' . $student->id . '/' . $contact_mapping->id, 'Edit')]
                 ]
-            ];   
+            ];
         }
-       
     }
 
 
@@ -186,11 +185,11 @@ function studentview_ALL(Web $w) {
     $classes_table = [];
     $classes = SchoolService::getInstance($w)->GetClassDataForStudentId($student->id);
     if (AuthService::getInstance($w)->user()->hasRole('school_manager')) {
-        $classes_table_headers = ['teacher','next date','time','frequency', 'Status', 'Rate', 'actions'];
+        $classes_table_headers = ['teacher', 'next date', 'time', 'frequency', 'Status', 'Rate', 'actions'];
     } else {
-        $classes_table_headers = ['teacher','next data', 'time', 'link'];
+        $classes_table_headers = ['teacher', 'next data', 'time', 'link'];
     }
-    
+
     if (!empty($classes)) {
         foreach ($classes as $class) {
             $row = [];
@@ -202,19 +201,18 @@ function studentview_ALL(Web $w) {
                 $row[] = $class->status;
                 $row[] = $class->rate;
                 $actions = [];
-            
+
                 $actions[] = Html::b('/school-manager/classdataedit/' . $student->id . '/' . $class->id, 'Edit');
                 //$actions[] = Html::b('/school-teacher/viewclassdata/' . $class->id, 'View');
                 $row[] = implode($actions);
             } else {
                 $row[] = $class->link;
             }
-            
-            
+
+
             $classes_table[] = $row;
         }
     }
 
     $w->ctx('classes_table', Html::table($classes_table, null, "tablesorter", $classes_table_headers));
-
 }

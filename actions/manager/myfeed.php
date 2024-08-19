@@ -64,11 +64,11 @@ function myfeed_ALL(Web $w) {
 
 
             // var_dump($class_instance->dt_class_date);
+            // die;
 
             $start = $class_instance->dt_class_date;
 
             $end = $class_instance->dt_class_date;
-
 
             // var_dump($class_instance->dt_class_date);
 
@@ -78,8 +78,8 @@ function myfeed_ALL(Web $w) {
             $event = [
                 'title' => $class_instance->getCalendarTitle(),
                 // use formatDate() for all of these it works and is more understandable. 
-                'start' => formatDate($start, 'Y-m-d H:i', $_SESSION['usertimezone']),
-                'end' => formatDate($end->add(new DateInterval("PT" . $class_data->duration . "H")), 'Y-m-d H:i', $_SESSION['usertimezone']),
+                'start' => formatDate($start, 'Y-m-d H:i', $_SESSION['timezone']),
+                'end' => formatDate($end->add(new DateInterval("PT" . $class_data->duration . "H")), 'Y-m-d H:i', $_SESSION['timezone']),
                 'url' => '/school-teacher/viewclassinstance/' . $class_instance->id,
                 'className' => $class_instance->status,
             ];

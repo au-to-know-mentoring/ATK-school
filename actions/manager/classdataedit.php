@@ -35,7 +35,7 @@ function classdataedit_GET(Web $w) {
                 ['Topic', 'text', 'topic', $class_data->topic]
             ],
             [
-                ['Timezone (Participent Timezone)', 'select', 'class_date_timezone', $student->timezone, SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
+                ['Timezone (Participants Timezone)', 'select', 'class_date_timezone', $student->timezone, SchoolService::getInstance($w)->GetTimeZoneSelectOptions()]
             ],
             [
                 ['Start Date', 'date', 'start_date', $class_data->getStartDate()],
@@ -70,9 +70,9 @@ function classdataedit_GET(Web $w) {
 
 
     if (empty($p['class_data_id'])) {
-        $form_url = '/school-manager/classdataeditconfirmation/' . $student->id;
+        $form_url = '/school-manager/classdataedit/' . $student->id;
     } else {
-        $form_url = '/school-manager/classdataeditconfirmation/' . $student->id . '/' . $class_data->id;
+        $form_url = '/school-manager/classdataedit/' . $student->id . '/' . $class_data->id;
     }
 
 
@@ -80,24 +80,26 @@ function classdataedit_GET(Web $w) {
 }
 
 function classdataedit_POST(Web $w) {
-    // $p = $w->pathMatch('student_id', 'class_data_id');
+    $p = $w->pathMatch('student_id', 'class_data_id');
 
-    // if (empty($p['student_id'])) {
-    //     $w->error('No Student Id found', '/school-teacher/studentlist');
-    // }
+    if (empty($p['student_id'])) {
+        $w->error('No Student Id found', '/school-teacher/studentlist');
+    }
 
-    // $student = SchoolService::getInstance($w)->GetStudentForId($p['student_id']);
+    $student = SchoolService::getInstance($w)->GetStudentForId($p['student_id']);
 
-    // if (empty($student)) {
-    //     $w->error('No Student found for id', '/school-teacher/studentlist');
-    // }
+    if (empty($student)) {
+        $w->error('No Student found for id', '/school-teacher/studentlist');
+    }
 
-    // if (empty($p['class_data_id'])) {
-    //     $class_data = new SchoolClassData($w);
-    // } else {
-    //     $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
-    // }
+    if (empty($p['class_data_id'])) {
+        $class_data = new SchoolClassData($w);
+    } else {
+        $class_data = SchoolService::getInstance($w)->GetClassDataForId($p['class_data_id']);
+    }
 
+    // var_dump($_POST);
+    // die;
     $class_data->fill($_POST);
     $class_data->student_id = $student->id;
 

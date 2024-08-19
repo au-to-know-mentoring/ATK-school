@@ -20,7 +20,7 @@ class SchoolClassData extends DbObject {
         //return formatDate($this->dt_class_date, 'H:i');
         if (!empty($this->dt_class_date)) {
 
-            return formatDate($this->dt_class_date, 'H:i', $_SESSION['usertimezone']);
+            return formatDate($this->dt_class_date, 'H:i', $_SESSION['timezone']);
         }
         return null;
     }
@@ -39,13 +39,13 @@ class SchoolClassData extends DbObject {
 
         switch ($this->status) {
             case "pending":
-                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone']);
+                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['timezone']);
                 break;
             case "active":
                 //find next date with same day name
 
                 //$date = date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
-                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['usertimezone']);
+                $date = formatDate($this->dt_class_date, 'l d/m/Y', $_SESSION['timezone']);
 
                 //  date('l d/m/Y', strtotime("next " . date('l', $this->dt_class_date)));
 
@@ -62,14 +62,14 @@ class SchoolClassData extends DbObject {
     public function getStartDate() {
         if (!empty($this->dt_class_date)) {
 
-            return formatDate($this->dt_class_date, 'd/m/Y', $_SESSION['usertimezone']);
+            return formatDate($this->dt_class_date, 'd/m/Y', $_SESSION['timezone']);
         }
         return null;
     }
 
     public function getEndDate() {
         if (!empty($this->dt_end_date)) {
-            return formatDate($this->dt_end_date, 'd/m/Y', $_SESSION['usertimezone']);
+            return formatDate($this->dt_end_date, 'd/m/Y', $_SESSION['timezone']);
         }
         return null;
     }
@@ -101,15 +101,26 @@ class SchoolClassData extends DbObject {
             // echo "</pre><br>next sunday = <br><pre>";
             // var_dump(strtotime('next sunday')); 
 
-
             $instance = new SchoolClassInstance($this->w);
             $instance->class_data_id = $this->id;
+
+
             $weekdayName = $this->dt_class_date->format('l Y/m/d');
             $weekdayNumber = $this->dt_class_date->format('%w');
 
+
+
+
             $dt_start = new DateTime($dateArray['start']);
+
             // $dt_start->setTimezone(new DateTimeZone("utc"));
             $dt_class = $this->dt_class_date;
+
+
+            // var_dump($dt_start);
+            // echo "<br><br>";
+            // var_dump($dt_class);
+            // die;
 
             $daysDifference = $dt_class->format('w') - $dt_start->format("w");
 
@@ -119,11 +130,13 @@ class SchoolClassData extends DbObject {
 
             $dt_OffsetPlusDiff = $dt_startRangeOffset->modify("+" . $daysDifference . "days");
 
-            // var_dump($dt_OffsetPlusDiff);
+            var_dump($dt_OffsetPlusDiff);
+            die;
             // var_dump($dt_OffsetPlusDiff->getTimezone());
+            // die;
 
 
-            $instance->dt_class_date = $dt_OffsetPlusDiff;
+            $instance->dt_class_date = $dt_OffsetPlusDiff->format('Y-m-d H:i');
 
 
 
@@ -167,7 +180,7 @@ class SchoolClassData extends DbObject {
                 $instance->class_data_id = $this->id;
 
 
-                $dt_today = new DateTime('now', new DateTimeZone($_SESSION['usertimezone']));
+                $dt_today = new DateTime('now', new DateTimeZone($_SESSION['timezone']));
 
                 $instance->dt_class_date = $dt_today->format('Y-m-d H:i:s') . " " . $this->dt_class_date->format('l H:i:s') . " this week";
                 //$instance->dt_class_date = date('Y-m-d H:i:s', strtotime("next " . date('l', $this->dt_class_date) . '' . date('H:i:s', $this->dt_class_date)));
